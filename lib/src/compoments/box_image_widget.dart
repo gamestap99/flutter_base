@@ -5,6 +5,7 @@ enum EShapeBoxImage { rectangle, circle }
 class WBoxImage extends StatelessWidget {
   final double? width;
   final double? height;
+  final BorderRadiusGeometry? borderRadius;
   final EShapeBoxImage shape;
   final String src;
   final BoxFit fit;
@@ -20,6 +21,7 @@ class WBoxImage extends StatelessWidget {
     this.height,
     this.errorBuilder,
     this.assetImg,
+    this.borderRadius,
     this.shape = EShapeBoxImage.rectangle,
     this.fit = BoxFit.fill,
     this.cached = false,
@@ -76,6 +78,7 @@ class WBoxImage extends StatelessWidget {
       // color: Colors.amber,
       child: shape == EShapeBoxImage.rectangle
           ? ClipRRect(
+              borderRadius: borderRadius ?? BorderRadius.zero,
               child: child,
             )
           : ClipOval(
