@@ -20,7 +20,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.0
   intl: ^0.18.1
-  syncfusion_flutter_datepicker: ^25.2.7
+  syncfusion_flutter_datepicker: ^23.2.7
 
 dev_dependencies:
   flutter_test:
