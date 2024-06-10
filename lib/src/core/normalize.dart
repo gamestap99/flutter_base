@@ -1,5 +1,7 @@
 
 
+import '../../flutter_base.dart';
+
 class Normalize {
   Normalize._();
 
@@ -123,5 +125,24 @@ class Normalize {
     }
 
     return rs;
+  }
+
+  static T? getValueMapMultiKeys<T>(List<String> keys, Map data) {
+    try {
+      dynamic value;
+
+      for (var key in keys) {
+        if (value is Map && value.containsKey(key)) {
+          value = value[key];
+        } else {
+          value = data[key];
+        }
+      }
+
+      return value;
+    } catch (ex, st) {
+      Helpers.dumpErr("object", error: ex, stackStrace: st);
+      return null;
+    }
   }
 }
