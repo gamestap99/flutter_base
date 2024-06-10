@@ -1,4 +1,7 @@
-part of flutter_base;
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
+import '../constants/app_img.dart';
 
 enum EShapeBoxImage { rectangle, circle }
 

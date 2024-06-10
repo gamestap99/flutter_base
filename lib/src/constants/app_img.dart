@@ -1,4 +1,4 @@
-part of flutter_base;
+import 'package:flutter/material.dart';
 
 const String _directory = "assets/image";
 
