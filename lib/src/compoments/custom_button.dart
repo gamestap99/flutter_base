@@ -41,32 +41,32 @@ class CustomButton extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
-                padding: WidgetStateProperty.all(padding),
-                maximumSize: WidgetStateProperty.all(const Size(double.maxFinite, 52)),
-                backgroundColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.disabled)) {
+                padding: MaterialStateProperty.all(padding),
+                maximumSize: MaterialStateProperty.all(const Size(double.maxFinite, 52)),
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.disabled)) {
                     return CColor.textDark3;
                   }
                   return backgroundColor ?? (primary ? CColor.primary : CColor.neutral2);
                 }),
-                foregroundColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.pressed)) {
+                foregroundColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.pressed)) {
                     return CColor.white;
                   }
                   return textColor ?? CColor.white;
                 }),
-                textStyle: WidgetStateProperty.all(textStyle),
-                overlayColor: WidgetStateProperty.resolveWith((states) {
-                  return states.contains(WidgetState.pressed) ? (overlayColor ?? CColor.darker) : null;
+                textStyle: MaterialStateProperty.all(textStyle),
+                overlayColor: MaterialStateProperty.resolveWith((states) {
+                  return states.contains(MaterialState.pressed) ? (overlayColor ?? CColor.darker) : null;
                 }),
                 side: primary
                     ? null
-                    : WidgetStateProperty.all(const BorderSide(
+                    : MaterialStateProperty.all(const BorderSide(
                         color: CColor.neutral6,
                         width: 1,
                       )),
-                elevation: WidgetStateProperty.all(0),
-                shape: WidgetStateProperty.all(shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
+                elevation: MaterialStateProperty.all(0),
+                shape: MaterialStateProperty.all(shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
             child: child,
           ),
         ),
