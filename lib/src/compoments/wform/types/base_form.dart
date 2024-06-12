@@ -15,6 +15,7 @@ abstract class BaseForm {
   final int? maxLines;
   final TextInputAction? textInputAction;
   final InputDecoration? decoration;
+  final InputBorder? disabledBorder;
 
   BaseForm({
     required this.name,
@@ -31,6 +32,7 @@ abstract class BaseForm {
     this.stackedLabel = true,
     this.enabled = true,
     this.decoration,
+    this.disabledBorder,
   });
 }
 

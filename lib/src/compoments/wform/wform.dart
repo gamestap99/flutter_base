@@ -403,6 +403,7 @@ class _WFormState<T> extends State<WForm<T>> {
               labelStyle: element.labelStyle,
               enabled: element.enabled,
               required: getRequired(element),
+              disabledBorder: element.disabledBorder,
               onChanged: (value) {
                 context.read<WFormBloc<T>>().add(
                       WFormChangeValue(
@@ -439,7 +440,7 @@ class _WFormState<T> extends State<WForm<T>> {
                           padding: EdgeInsets.only(top: widget.space),
                           child: e.value,
                         ))
-                    .toList(),
+                    ,
               ],
             ),
           ),

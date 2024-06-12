@@ -20,6 +20,7 @@ class WApiSelect extends StatefulWidget {
   final Function(ValueChanged<dynamic> onChanged) onTap;
   final TextStyle? labelStyle;
   final String? Function(String?)? validator;
+  final InputBorder? disabledBorder;
 
   const WApiSelect({
     super.key,
@@ -40,6 +41,7 @@ class WApiSelect extends StatefulWidget {
     required this.controller,
     this.name = '',
     this.validator,
+    this.disabledBorder,
   });
 
   @override
@@ -63,6 +65,7 @@ class _WApiSelectState extends State<WApiSelect> {
       enabled: widget.enabled,
       icon: widget.icon,
       fillColor: widget.fillColor,
+      disabledBorder: widget.disabledBorder,
       suffix: InkWell(
         onTap: () {
           if (widget.value.isNotEmpty) {

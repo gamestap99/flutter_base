@@ -18,5 +18,7 @@ class MFormDynamicSelectItem extends BaseForm {
     required super.label,
     required super.value,
     super.enabled,
+    super.disabledBorder,
+    super.decoration,
   });
 }
