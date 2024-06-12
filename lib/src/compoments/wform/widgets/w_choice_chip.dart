@@ -54,6 +54,22 @@ class _WChoiceChipState extends State<WChoiceChip> {
   dynamic _value;
 
   @override
+  void initState() {
+    setState(() {
+      _value = widget.value;
+    });
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant WChoiceChip oldWidget) {
+    setState(() {
+      _value = widget.value;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

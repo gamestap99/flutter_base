@@ -427,7 +427,16 @@ class _WFormState<T> extends State<WForm<T>> {
             return (element.buildWhen?.call(previous, current)) ?? (previous.values[element.name] != current.values[element.name]);
           },
           builder: (context, state) {
+            String value = '';
+
+            if (state.values[element.name] != null) {
+              value = state.values[element.name];
+            } else if (element.value != null) {
+              value = element.value;
+            }
+
             return WChoiceChip(
+              value: value,
               name: element.name,
               label: element.label,
               labelStyle: element.labelStyle,
@@ -459,6 +468,7 @@ class _WFormState<T> extends State<WForm<T>> {
           SingleChildScrollView(
             padding: widget.padding,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ...items.entries.map((e) => Padding(
                       padding: EdgeInsets.only(top: widget.space),
