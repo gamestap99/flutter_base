@@ -18,13 +18,12 @@ class WChoiceChip extends StatefulWidget {
   final Widget? icon;
   final Function? format;
   final bool showSearch;
-  final Function selectLabel;
-  final Function selectValue;
   final TextEditingController controller;
   final List<MChoiceChipData> items;
   final String? hintText;
   final TextStyle? labelStyle;
   final Color? requiredColor;
+  final String? Function(String?)? validator;
 
   const WChoiceChip({
     super.key,
@@ -41,10 +40,9 @@ class WChoiceChip extends StatefulWidget {
     this.labelStyle,
     this.requiredColor,
     this.showSearch = true,
-    required this.selectLabel,
-    required this.selectValue,
     required this.controller,
     required this.items,
+    required this.validator,
     this.name = '',
   });
 

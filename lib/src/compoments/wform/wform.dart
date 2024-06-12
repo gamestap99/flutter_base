@@ -388,9 +388,7 @@ class _WFormState<T> extends State<WForm<T>> {
             );
           },
         );
-      }
-
-      if (element is MFormDynamicSelectItem) {
+      } else if (element is MFormDynamicSelectItem) {
         child = BlocBuilder<WFormBloc<T>, WFormState>(
           buildWhen: (previous, current) {
             return (element.buildWhen?.call(previous, current)) ?? (previous.values[element.name] != current.values[element.name]);
@@ -419,6 +417,33 @@ class _WFormState<T> extends State<WForm<T>> {
                 element.apiBuilder.call(onChanged, state.values[element.name]);
               },
               validator: (txt) => validator(txt, element, state.values),
+              // stackedLabel: true,
+            );
+          },
+        );
+      } else if (element is MFormChoiceChipItem) {
+        child = BlocBuilder<WFormBloc<T>, WFormState>(
+          buildWhen: (previous, current) {
+            return (element.buildWhen?.call(previous, current)) ?? (previous.values[element.name] != current.values[element.name]);
+          },
+          builder: (context, state) {
+            return WChoiceChip(
+              name: element.name,
+              label: element.label,
+              labelStyle: element.labelStyle,
+              enabled: element.enabled?.call(state) ?? true,
+              required: getRequired(element),
+              onChanged: (value) {
+                context.read<WFormBloc<T>>().add(
+                      WFormChangeValue(
+                        name: element.name,
+                        value: value,
+                      ),
+                    );
+              },
+              controller: listController[element.name] ?? TextEditingController(),
+              validator: (txt) => validator(txt, element, state.values),
+              items: element.items,
               // stackedLabel: true,
             );
           },
