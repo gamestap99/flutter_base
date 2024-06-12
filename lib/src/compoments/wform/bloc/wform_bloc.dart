@@ -21,12 +21,13 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
     this.api,
     this.onSubmitCallBack,
   }) : super(const WFormState()) {
+    on(_onChangeValue);
     on(_onChangeValues);
     on(_onFinish);
     on(_onReset);
   }
 
-  Future<void> _onChangeValues(WFormChangeValue event, Emitter<WFormState> emit) async {
+  Future<void> _onChangeValue(WFormChangeValue event, Emitter<WFormState> emit) async {
     return await safeCall(
       onCall: () async {
         Map<String, dynamic> values = Map.from(state.values);
@@ -37,6 +38,32 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
         }
 
         values[event.name] = event.value;
+
+        emit(state.copyWith(
+          values: values,
+          errors: errors,
+        ));
+      },
+      onError: (ex) async {},
+    );
+  }
+
+  Future<void> _onChangeValues(WFormChangeValues event, Emitter<WFormState> emit) async {
+    return await safeCall(
+      onCall: () async {
+        Map<String, dynamic> values = Map.from(state.values);
+        Map<String, dynamic> errors = Map.from(state.errors);
+
+        values = {
+          ...values,
+          ...event.values,
+        };
+
+        event.values.forEach((key, value) {
+          if (errors.containsKey(key)) {
+            errors.remove(key);
+          }
+        });
 
         emit(state.copyWith(
           values: values,
@@ -103,6 +130,12 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
     add(WFormChangeValue(
       name: name,
       value: value,
+    ));
+  }
+
+  void addValues({required Map<String, dynamic> values}) {
+    add(WFormChangeValues(
+      values: values,
     ));
   }
 

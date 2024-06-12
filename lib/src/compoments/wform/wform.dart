@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/src/compoments/wform/types/dynamic_select.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -402,6 +401,7 @@ class _WFormState<T> extends State<WForm<T>> {
               name: element.name,
               label: element.label,
               labelStyle: element.labelStyle,
+              enabled: element.enabled,
               required: getRequired(element),
               onChanged: (value) {
                 context.read<WFormBloc<T>>().add(

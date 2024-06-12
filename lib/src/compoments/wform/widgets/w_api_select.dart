@@ -22,7 +22,7 @@ class WApiSelect extends StatefulWidget {
   final String? Function(String?)? validator;
 
   const WApiSelect({
-    Key? key,
+    super.key,
     this.label = '',
     this.value = '',
     required this.onChanged,
@@ -40,7 +40,7 @@ class WApiSelect extends StatefulWidget {
     required this.controller,
     this.name = '',
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<WApiSelect> createState() => _WApiSelectState();
