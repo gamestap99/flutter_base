@@ -11,7 +11,7 @@ abstract class BaseForm {
   final bool stackedLabel;
   final bool Function(WFormState state)? enabled;
   final Widget? icon;
-  final Color? fillColor;
+  final Color Function(WFormState state)? fillColor;
   final int? minLines;
   final int? maxLines;
   final TextInputAction? textInputAction;

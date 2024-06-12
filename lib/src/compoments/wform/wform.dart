@@ -131,7 +131,7 @@ class _WFormState<T> extends State<WForm<T>> {
                     errorBorder: element.options?.errorBorder,
                     focusedBorder: element.options?.focusedBorder,
                     disabledBorder: element.options?.disabledBorder,
-                    fillColor: element.fillColor,
+                    fillColor: element.fillColor?.call(state),
                     iconColor: element.options?.iconColor,
                     requiredColor: element.options?.requiredColor,
                     style: element.options?.style,
@@ -241,7 +241,7 @@ class _WFormState<T> extends State<WForm<T>> {
                     errorBorder: element.options?.errorBorder,
                     focusedBorder: element.options?.focusedBorder,
                     disabledBorder: element.options?.disabledBorder,
-                    fillColor: element.fillColor,
+                    fillColor: element.fillColor?.call(state),
                     iconColor: element.options?.iconColor,
                     requiredColor: element.options?.requiredColor,
                     style: element.options?.style,
@@ -397,7 +397,7 @@ class _WFormState<T> extends State<WForm<T>> {
           },
           builder: (context, state) {
             return WApiSelect(
-              fillColor: element.fillColor,
+              fillColor: element.fillColor?.call(state),
               name: element.name,
               label: element.label,
               labelStyle: element.labelStyle,
