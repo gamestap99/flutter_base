@@ -17,6 +17,7 @@ abstract class BaseForm {
   final TextInputAction? textInputAction;
   final InputDecoration? decoration;
   final InputBorder? disabledBorder;
+  final bool Function(WFormState, WFormState)? buildWhen;
 
   BaseForm({
     required this.name,
@@ -34,6 +35,7 @@ abstract class BaseForm {
     this.enabled,
     this.decoration,
     this.disabledBorder,
+    this.buildWhen,
   });
 }
 

@@ -393,7 +393,7 @@ class _WFormState<T> extends State<WForm<T>> {
       if (element is MFormDynamicSelectItem) {
         child = BlocBuilder<WFormBloc<T>, WFormState>(
           buildWhen: (previous, current) {
-            return previous.values[element.name] != current.values[element.name];
+            return (element.buildWhen?.call(previous, current)) ?? (previous.values[element.name] != current.values[element.name]);
           },
           builder: (context, state) {
             return WApiSelect(
