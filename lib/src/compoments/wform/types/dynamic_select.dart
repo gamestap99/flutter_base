@@ -20,5 +20,12 @@ class MFormDynamicSelectItem extends BaseForm {
     super.enabled,
     super.disabledBorder,
     super.decoration,
+    super.buildWhen,
+    super.icon,
+    super.textInputAction,
+    super.hint,
+    super.maxLines,
+    super.minLines,
+    super.stackedLabel,
   });
 }
