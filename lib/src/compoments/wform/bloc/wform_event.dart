@@ -19,6 +19,19 @@ class WFormChangeValue extends WFormEvent {
       ];
 }
 
+class WFormChangeValues extends WFormEvent {
+  final Map<String,dynamic> values;
+
+  WFormChangeValues({
+    required this.values,
+  });
+
+  @override
+  List<Object?> get props => [
+    values,
+  ];
+}
+
 class WFormAddKey extends WFormEvent {
   final GlobalKey<FormState> formKey;
 
