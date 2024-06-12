@@ -11,12 +11,9 @@ class WFormState extends BlocBaseState {
     this.values = const {},
     this.errors = const {},
     this.result,
-    EBlocStateStatus status = EBlocStateStatus.idle,
-    NetworkException? exception,
-  }) : super(
-          status: status,
-          exception: exception,
-        );
+    super.status = EBlocStateStatus.idle,
+    super.exception,
+  });
 
   WFormState copyWith({
     Map<String, dynamic>? values,

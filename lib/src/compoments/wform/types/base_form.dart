@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base/flutter_base.dart';
 
 abstract class BaseForm {
   final String name;
@@ -8,7 +9,7 @@ abstract class BaseForm {
   final List<MValidateFormItem>? validators;
   final TextStyle? labelStyle;
   final bool stackedLabel;
-  final bool enabled;
+  final bool Function(WFormState state)? enabled;
   final Widget? icon;
   final Color? fillColor;
   final int? minLines;
@@ -30,7 +31,7 @@ abstract class BaseForm {
     this.fillColor,
     this.textInputAction,
     this.stackedLabel = true,
-    this.enabled = true,
+    this.enabled,
     this.decoration,
     this.disabledBorder,
   });

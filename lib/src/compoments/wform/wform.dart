@@ -18,12 +18,12 @@ class WForm<T> extends StatefulWidget {
   final double space;
 
   const WForm({
-    Key? key,
+    super.key,
     required this.items,
     this.builder,
     this.padding,
     this.space = 16,
-  }) : super(key: key);
+  });
 
   @override
   State<WForm<T>> createState() => _WFormState<T>();
@@ -401,7 +401,7 @@ class _WFormState<T> extends State<WForm<T>> {
               name: element.name,
               label: element.label,
               labelStyle: element.labelStyle,
-              enabled: element.enabled,
+              enabled: element.enabled?.call(state) ?? true,
               required: getRequired(element),
               disabledBorder: element.disabledBorder,
               onChanged: (value) {
@@ -435,12 +435,10 @@ class _WFormState<T> extends State<WForm<T>> {
             padding: widget.padding,
             child: Column(
               children: <Widget>[
-                ...items.entries
-                    .map((e) => Padding(
-                          padding: EdgeInsets.only(top: widget.space),
-                          child: e.value,
-                        ))
-                    ,
+                ...items.entries.map((e) => Padding(
+                      padding: EdgeInsets.only(top: widget.space),
+                      child: e.value,
+                    )),
               ],
             ),
           ),
