@@ -5,3 +5,4 @@ export 'w_multi_dynamic_select.dart';
 export 'w_multi_select.dart';
 export 'w_search.dart';
 export 'w_select.dart';
+export 'w_choice_chip.dart';
