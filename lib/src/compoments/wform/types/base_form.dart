@@ -8,6 +8,7 @@ abstract class BaseForm {
   final List<MValidateFormItem>? validators;
   final TextStyle? labelStyle;
   final bool stackedLabel;
+  final bool enabled;
   final Widget? icon;
   final Color? fillColor;
   final int? minLines;
@@ -28,6 +29,7 @@ abstract class BaseForm {
     this.fillColor,
     this.textInputAction,
     this.stackedLabel = true,
+    this.enabled = true,
     this.decoration,
   });
 }
