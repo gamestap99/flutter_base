@@ -1,25 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
-String getEnumValue(e) => e.toString().split('.').last;
 
-// Future<bool> isConnectInternetAccessServer() async {
-//   var connectivityResult = await (Connectivity().checkConnectivity());
-//
-//   if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-//     try {
-//       final result = await InternetAddress.lookup("google.com");
-//
-//       return (result.isNotEmpty && result[0].rawAddress.isNotEmpty);
-//     } catch (ex) {
-//       return false;
-//     }
-//   } else {
-//     return false;
-//   }
-// }
+class FlutterBaseCoreUtils {
+  static String getEnumValue(e) => e.toString().split('.').last;
 
-class CUtils {
   static String base64Encode(dynamic str) {
     if (str is Map || str is List) {
       str = jsonEncode(str);
@@ -44,16 +28,6 @@ class CUtils {
 
     return base64Regex.hasMatch(str);
   }
-}
-
-enum EPathCdnGs {
-  si("si"),
-  sv("sv"),
-  sp("sp");
-
-  final String value;
-
-  const EPathCdnGs(this.value);
 }
 
 T? getValueMap<T>(dynamic map, List<dynamic> keys) {

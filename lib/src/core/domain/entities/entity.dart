@@ -28,14 +28,14 @@ class ItemResEntity<T> extends ResEntity {
   final T? data;
 
   ItemResEntity({
-    required ResStatus status,
-    bool success = false,
-    InfoEmptyEntity? information,
-    bool? isEmpty,
-    dynamic error,
-    int code = 0,
+    required super.status,
+    super.success,
+    super.information,
+    super.isEmpty,
+    super.error,
+    super.code,
     this.data,
-  }) : super(status: status, success: success, information: information, isEmpty: isEmpty, error: error, code: code);
+  });
 
   void callSuccess(ItemResSuccess<T> call) {
     if (status.isNone() || status.isFailure()) return;
@@ -56,16 +56,16 @@ class ItemsResEntity<T> extends ResEntity {
   final PaginateMetaEntity? meta;
 
   ItemsResEntity({
-    required ResStatus status,
-    bool success = false,
-    InfoEmptyEntity? information,
-    bool? isEmpty,
-    dynamic error,
-    int code = 0,
+    required super.status,
+    super.success,
+    super.information,
+    super.isEmpty,
+    super.error,
+    super.code,
     this.items,
     this.links,
     this.meta,
-  }) : super(status: status, success: success, information: information, isEmpty: isEmpty, error: error, code: code);
+  });
 
   void onError(ItemsResError call) {
     if (status.isNone() || status.isSuccess()) return;

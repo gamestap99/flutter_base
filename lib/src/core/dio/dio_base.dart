@@ -68,5 +68,5 @@ enum RequestMethod {
 }
 
 extension RequestMethodX on RequestMethod {
-  String get value => getEnumValue(this).toUpperCase();
+  String get value => FlutterBaseCoreUtils.getEnumValue(this).toUpperCase();
 }
