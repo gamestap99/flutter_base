@@ -218,6 +218,7 @@ class _WFormState<T> extends State<WForm<T>> {
 
                   return WInput(
                     controller: listController[element.name] ?? TextEditingController(),
+                    keyboardType: element.keyboardType,
                     name: element.name,
                     label: element.label,
                     value: value,
@@ -228,6 +229,7 @@ class _WFormState<T> extends State<WForm<T>> {
                     errorText: state.errors[element.name],
                     minLines: element.minLines,
                     maxLines: element.isPassword ? 1 : (element.maxLines ?? 1),
+                    suffix: element.suffix,
                     icon: element.icon,
                     onChanged: (value) {
                       context.read<WFormBloc<T>>().add(

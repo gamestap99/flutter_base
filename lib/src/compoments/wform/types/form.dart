@@ -36,6 +36,8 @@ class MFormItem extends BaseForm {
     super.icon,
     super.hint,
     super.textInputAction,
+    super.keyboardType,
+    super.suffix,
   });
 }
 

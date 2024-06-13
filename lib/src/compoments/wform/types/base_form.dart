@@ -18,6 +18,8 @@ abstract class BaseForm {
   final InputDecoration? decoration;
   final InputBorder? disabledBorder;
   final bool Function(WFormState, WFormState)? buildWhen;
+  final TextInputType? keyboardType;
+  final Widget? suffix;
 
   BaseForm({
     required this.name,
@@ -36,6 +38,8 @@ abstract class BaseForm {
     this.decoration,
     this.disabledBorder,
     this.buildWhen,
+    this.keyboardType,
+    this.suffix,
   });
 }
 

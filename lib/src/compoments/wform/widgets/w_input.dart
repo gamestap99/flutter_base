@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,8 +7,6 @@ import '../../../constants/color.dart';
 import '../../../constants/dimens.dart';
 import '../../../constants/style.dart';
 import '../../../widgets/spacer.dart';
-
-
 
 class WInput extends StatefulWidget {
   final String label;
@@ -44,6 +41,7 @@ class WInput extends StatefulWidget {
   final Color? iconColor;
   final Color? requiredColor;
   final TextInputAction? textInputAction;
+  final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
 
   const WInput({
@@ -63,6 +61,7 @@ class WInput extends StatefulWidget {
     this.icon,
     this.suffix,
     this.validator,
+    this.keyboardType,
     this.textInputAction,
     this.space = false,
     required this.controller,
@@ -181,7 +180,7 @@ class _WInputState extends State<WInput> {
           validator: widget.validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: visible,
-          keyboardType: widget.number ? TextInputType.number : null,
+          keyboardType: widget.number ? TextInputType.number : widget.keyboardType,
           decoration: InputDecoration(
             hintText: widget.hintText,
             errorText: widget.errorText,
