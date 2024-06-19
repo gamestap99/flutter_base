@@ -20,6 +20,8 @@ abstract class BaseForm {
   final bool Function(WFormState, WFormState)? buildWhen;
   final TextInputType? keyboardType;
   final Widget? suffix;
+  final MFormOptions? options;
+
 
   BaseForm({
     required this.name,
@@ -40,6 +42,7 @@ abstract class BaseForm {
     this.buildWhen,
     this.keyboardType,
     this.suffix,
+    this.options,
   });
 }
 
@@ -56,5 +59,29 @@ class MValidateFormItem {
     this.customCheck,
     this.max,
     required this.message,
+  });
+}
+
+class MFormOptions {
+  final InputBorder? enabledBorder;
+  final InputBorder? errorBorder;
+  final InputBorder? focusedBorder;
+  final InputBorder? disabledBorder;
+  final Color? fillColor;
+  final Color? iconColor;
+  final Color? requiredColor;
+  final TextStyle? style;
+  final TextStyle? hintStyle;
+
+  MFormOptions({
+    this.enabledBorder,
+    this.errorBorder,
+    this.focusedBorder,
+    this.disabledBorder,
+    this.fillColor,
+    this.iconColor,
+    this.requiredColor,
+    this.style,
+    this.hintStyle,
   });
 }

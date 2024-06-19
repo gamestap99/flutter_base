@@ -10,33 +10,63 @@ import '../index.dart';
 
 class WDate extends StatefulWidget {
   final String label;
-  final String value;
+  final DateTime? value;
   final bool space;
   final int maxLines;
+  final int minLines;
   final bool required;
   final bool enabled;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<DateTime>? onChanged;
   final Widget? icon;
   final String? format;
+  final String? errorText;
   final bool stackedLabel;
   final TextEditingController controller;
   final SelectDateType selectDateType;
+  final InputBorder? enabledBorder;
+  final InputBorder? errorBorder;
+  final InputBorder? focusedBorder;
+  final InputBorder? disabledBorder;
+  final Color? fillColor;
+  final Color? iconColor;
+  final Color? requiredColor;
+  final String? hintText;
+  final TextStyle? labelStyle;
+  final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
+  final TextStyle? hintStyle;
+  final TextStyle? style;
 
   const WDate({
-    Key? key,
+    super.key,
     this.label = '',
-    this.value = '',
+    this.value,
     this.onChanged,
+    this.errorText,
+    this.stackedLabel = true,
     this.required = false,
     this.enabled = true,
     this.space = false,
     this.maxLines = 1,
+    this.minLines = 1,
     this.icon,
+    this.hintText,
     this.format = 'dd/MM/yyyy',
     required this.controller,
     this.selectDateType = SelectDateType.full,
-    this.stackedLabel = false,
-  }) : super(key: key);
+    this.enabledBorder,
+    this.errorBorder,
+    this.focusedBorder,
+    this.disabledBorder,
+    this.fillColor,
+    this.iconColor,
+    this.requiredColor,
+    this.labelStyle,
+    this.validator,
+    this.textInputAction,
+    this.hintStyle,
+    this.style,
+  });
 
   @override
   State<WDate> createState() => _WDateState();
@@ -45,18 +75,41 @@ class WDate extends StatefulWidget {
 class _WDateState extends State<WDate> {
   FocusNode focusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
+  String format = '';
+
+  @override
+  void initState() {
+    if (widget.value != null) {
+      selectedDate = widget.value!;
+
+      format = DateFormat(widget.format).format(widget.value!);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WInput(
       controller: widget.controller,
       label: widget.label,
-      value: widget.value,
+      value: format,
       space: widget.space,
       maxLines: widget.maxLines,
       required: widget.required,
       enabled: widget.enabled,
       stackedLabel: widget.stackedLabel,
+      enabledBorder: widget.enabledBorder,
+      errorBorder: widget.errorBorder,
+      focusedBorder: widget.focusedBorder,
+      disabledBorder: widget.disabledBorder,
+      fillColor: widget.fillColor,
+      iconColor: widget.iconColor,
+      hintText: widget.hintText,
+      labelStyle: widget.labelStyle,
+      validator: widget.validator,
+      textInputAction: widget.textInputAction,
+      hintStyle: widget.hintStyle,
+      style: widget.style,
       suffix: Icon(
         Icons.calendar_month_rounded,
         color: CColor.primary,
@@ -86,11 +139,13 @@ class _WDateState extends State<WDate> {
                             if (widget.onChanged != null) {
                               selectedDate = args.value;
                               initializeDateFormatting();
-                              widget.controller.text = DateFormat('dd MMMM, yyyy', 'vi').format(args.value);
-                              widget.onChanged!(args.value.toString());
+                              widget.controller.text = DateFormat(widget.format).format(args.value);
+                              format = DateFormat(widget.format).format(args.value);
+                              widget.onChanged!(args.value);
                               await Future.delayed(const Duration(milliseconds: 100));
                               if (context.mounted) {
                                 Navigator.of(context).pop();
+                                setState(() {});
                               }
                             }
                           });
@@ -103,14 +158,6 @@ class _WDateState extends State<WDate> {
       },
       icon: widget.icon,
     );
-  }
-
-  @override
-  void initState() {
-    if (widget.value != '') {
-      selectedDate = DateTime.parse(widget.value);
-    }
-    super.initState();
   }
 }
 

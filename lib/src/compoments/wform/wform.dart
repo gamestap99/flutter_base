@@ -264,7 +264,7 @@ class _WFormState<T> extends State<WForm<T>> {
             return (previous.values[element.name] != current.values[element.name]) || (previous.errors[element.name] != current.errors[element.name]);
           },
           builder: (context, state) {
-            String value = '';
+            DateTime? value;
 
             if (state.values[element.name] != null) {
               value = state.values[element.name];
@@ -274,12 +274,16 @@ class _WFormState<T> extends State<WForm<T>> {
 
             return WDate(
               controller: listController[element.name] ?? TextEditingController(),
-              // name: element.name,
+              format: element.format,
               label: element.label,
               value: value,
-              // required: getRequired(element),
-              // errorText: state.errors[element.name],
-              maxLines: 3,
+              hintText: element.hint,
+              labelStyle: element.labelStyle,
+              required: getRequired(element),
+              errorText: state.errors[element.name],
+              minLines: element.minLines ?? 1,
+              maxLines: element.maxLines ?? 1,
+              icon: element.icon,
               onChanged: (value) {
                 context.read<WFormBloc<T>>().add(
                       WFormChangeValue(
@@ -288,8 +292,18 @@ class _WFormState<T> extends State<WForm<T>> {
                       ),
                     );
               },
-              // validator: (txt) => validator(txt, element),
               stackedLabel: true,
+              enabledBorder: element.options?.enabledBorder,
+              errorBorder: element.options?.errorBorder,
+              focusedBorder: element.options?.focusedBorder,
+              disabledBorder: element.options?.disabledBorder,
+              fillColor: element.fillColor?.call(state),
+              iconColor: element.options?.iconColor,
+              requiredColor: element.options?.requiredColor,
+              style: element.options?.style,
+              hintStyle: element.options?.hintStyle,
+              validator: (txt) => validator(txt, element, state.values),
+              textInputAction: element.textInputAction,
             );
           },
         );
