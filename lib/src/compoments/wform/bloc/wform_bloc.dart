@@ -118,6 +118,18 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
     onSubmitCallBack?.call({});
   }
 
+  bool validate() {
+    return _formKey.currentState!.validate();
+  }
+
+  Map<String, dynamic> getValuesWithValidate() {
+    if ((_formKey.currentState?.validate() ?? false)) {
+      return state.values;
+    }
+
+    return {};
+  }
+
   void onReset() {
     add(WFormReset());
   }
