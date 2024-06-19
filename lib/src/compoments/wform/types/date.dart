@@ -2,12 +2,14 @@ import '../index.dart';
 
 class MFormDateItem extends BaseForm {
   final String format;
+  final DateTime? initValue;
 
   MFormDateItem({
+    this.initValue,
     this.format = 'dd/MM/yyyy',
     required super.name,
     required super.label,
-    required super.value,
+    super.value,
     super.labelStyle,
     super.validators,
     super.minLines,

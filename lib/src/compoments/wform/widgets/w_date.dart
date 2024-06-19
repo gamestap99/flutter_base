@@ -10,6 +10,7 @@ import '../index.dart';
 
 class WDate extends StatefulWidget {
   final String label;
+  final DateTime? initValue;
   final DateTime? value;
   final bool space;
   final int maxLines;
@@ -40,6 +41,7 @@ class WDate extends StatefulWidget {
   const WDate({
     super.key,
     this.label = '',
+    this.initValue,
     this.value,
     this.onChanged,
     this.errorText,
@@ -79,10 +81,11 @@ class _WDateState extends State<WDate> {
 
   @override
   void initState() {
-    if (widget.value != null) {
-      selectedDate = widget.value!;
+    if (widget.initValue != null) {
+      selectedDate = widget.initValue!;
 
-      format = DateFormat(widget.format).format(widget.value!);
+      format = DateFormat(widget.format).format(widget.initValue!);
+      widget.onChanged?.call(widget.initValue!);
     }
     super.initState();
   }

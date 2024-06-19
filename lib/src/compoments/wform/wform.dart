@@ -273,6 +273,7 @@ class _WFormState<T> extends State<WForm<T>> {
             }
 
             return WDate(
+              initValue: element.initValue,
               controller: listController[element.name] ?? TextEditingController(),
               format: element.format,
               label: element.label,
