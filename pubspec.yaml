@@ -1,6 +1,6 @@
 name: flutter_base
 description: "A new Flutter package project."
-version: 0.0.1
+version: 0.0.2
 homepage: "https://github.com/gamestap99/flutter_base"
 
 environment:
@@ -18,13 +18,13 @@ dependencies:
   flutter_bloc: ^8.1.5
   flutter_easyloading: ^3.0.5
   flutter_screenutil: ^5.9.3
-  intl: ^0.18.1
-  syncfusion_flutter_datepicker: ^23.2.7
+  intl: ^0.19.0
+  syncfusion_flutter_datepicker: ^26.1.38
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
