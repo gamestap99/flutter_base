@@ -1,27 +1,7 @@
-
 import 'package:equatable/equatable.dart';
+import 'package:flutter_base/flutter_base.dart';
 
 import '../dio/network_exceptions.dart';
-
-enum EBlocStateStatus {
-  idle,
-  loading,
-  success,
-  fail,
-  warning,
-  loadingMore,
-  loadMoreFailure,
-  loadMoreSuccess,
-  loadingRefresh,
-  loadRefreshFailure,
-  loadRefreshSuccess,
-}
-
-extension EBlocStateStatusX on EBlocStateStatus {
-  bool get isSuccess => this == EBlocStateStatus.success;
-
-  bool get isLoading => this == EBlocStateStatus.loading;
-}
 
 abstract class BlocBaseState extends Equatable {
   final EBlocStateStatus status;

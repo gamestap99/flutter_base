@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base/flutter_base.dart';
 import 'package:flutter_base/src/core/bloc/bloc_base_main.dart';
 import 'package:flutter_base/src/core/domain/entities/entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/bloc/bloc_base_state.dart';
 import '../../../core/dio/network_exceptions.dart';
 import '../index.dart';
 
@@ -20,7 +20,7 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
   WFormBloc({
     this.api,
     this.onSubmitCallBack,
-  }) : super(const WFormState()) {
+  }) : super(WFormState()) {
     on(_onChangeValue);
     on(_onChangeValues);
     on(_onFinish);

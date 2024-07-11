@@ -1,3 +1,5 @@
+import 'package:flutter_base/flutter_base.dart';
+
 import '../../../core/bloc/bloc_base_state.dart';
 import '../../../core/dio/network_exceptions.dart';
 
