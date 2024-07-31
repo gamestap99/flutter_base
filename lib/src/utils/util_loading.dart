@@ -52,6 +52,20 @@ class UtilLoading {
     );
   }
 
+  showInfo({
+    required String content,
+    Duration? duration,
+    EasyLoadingMaskType? maskType,
+    bool? dismissOnTap,
+  }) async {
+    await EasyLoading.showInfo(
+      content,
+      duration: duration,
+      maskType: maskType,
+      dismissOnTap: dismissOnTap,
+    );
+  }
+
   showLoading({String? status}) async {
     await EasyLoading.show(
       indicator: const SizedBox(
