@@ -54,6 +54,7 @@ class ItemsResEntity<T> extends ResEntity {
   final List<T>? items;
   final PaginateLinksEntity? links;
   final PaginateMetaEntity? meta;
+  final bool? isNextAvailable;
 
   ItemsResEntity({
     required super.status,
@@ -65,6 +66,7 @@ class ItemsResEntity<T> extends ResEntity {
     this.items,
     this.links,
     this.meta,
+    this.isNextAvailable,
   });
 
   void onError(ItemsResError call) {
