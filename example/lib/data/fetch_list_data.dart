@@ -16,7 +16,6 @@ Future<ItemsResEntity<ProjectEntity>> fetchGetLists() async {
     success: true,
     status: ResStatus.success,
     items: apiRes.items?.map((e) => ProjectEntity.fromJson(e)).toList(),
-    isNextAvailable: (oMeta != null && oMeta.nextPage != null),
   );
 }
 

@@ -7,9 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BaseListCupertinoNavbarData {
   final String title;
+  final Widget? leading;
+  final Widget? trailing;
+  final String? previousPageTitle;
 
   BaseListCupertinoNavbarData({
     required this.title,
+     this.leading,
+     this.trailing,
+     this.previousPageTitle,
   });
 }
 
@@ -180,6 +186,9 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                   stretch: false,
                   backgroundColor: CupertinoColors.white.withOpacity(visibility),
                   middle: visibility > 0.9 ? Text(widget.baseListCupertinoNavbarData.title) : const Text(""),
+                  trailing: widget.baseListCupertinoNavbarData.trailing,
+                  leading: widget.baseListCupertinoNavbarData.leading,
+                  previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
                   largeTitle: VisibilityDetector(
                     key: const Key('nav-container'),
                     onVisibilityChanged: (VisibilityInfo info) {
