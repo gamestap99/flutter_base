@@ -1,3 +1,4 @@
+import 'package:example/screens/cupertino_range_date_widget.dart';
 import 'package:example/screens/list_cupertino_fetch_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      title: 'iOSDemo',
-      theme: CupertinoThemeData(
-          primaryColor: Colors.black,
-          scaffoldBackgroundColor: CupertinoColors.tertiarySystemGroupedBackground,
-          barBackgroundColor: Colors.white,
-         ),
+    return MaterialApp(
+      theme: ThemeData(platform: TargetPlatform.iOS),
+      darkTheme: ThemeData.dark().copyWith(platform: TargetPlatform.iOS),
+      builder: (context, Widget? child) => CupertinoTheme(
+        data: CupertinoThemeData(
+          brightness: Theme.of(context).brightness,
+          scaffoldBackgroundColor: CupertinoColors.systemBackground,
+        ),
+        child: child!,
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -42,7 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
         'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
           return const ListCupertinoFetchData();
         })),
-      }
+      },
+      {
+        "title": "Cupertino Range Date",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const CupertinoRangeDateScreen();
+        })),
+      },
     ];
 
     return CupertinoPageScaffold(
