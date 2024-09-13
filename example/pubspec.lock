@@ -205,6 +205,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_screenutil:
     dependency: transitive
     description:
@@ -500,6 +505,14 @@ packages:
     description:
       name: syncfusion_flutter_datepicker
       sha256: "9d0e1db2f49cef3fde28c5a42c7ef9b64fc9a49c52557eb6961cd41af3cf8adc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "26.2.14"
+  syncfusion_localizations:
+    dependency: "direct main"
+    description:
+      name: syncfusion_localizations
+      sha256: "99c3586b2502d2bc4b4c8286c83061b8bf2b5c9e4617433b7576f3d1409d099e"
       url: "https://pub.dev"
     source: hosted
     version: "26.2.14"

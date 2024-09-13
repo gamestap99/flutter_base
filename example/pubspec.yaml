@@ -38,6 +38,9 @@ dependencies:
   flutter_base:
     path: ../
   flutter_bloc: ^8.1.6
+  syncfusion_localizations: ^26.2.14
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
