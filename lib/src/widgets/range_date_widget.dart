@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/src/constants/style.dart';
 import 'package:intl/intl.dart';
@@ -124,6 +125,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SfDateRangePicker(
                   controller: controller,
+                  backgroundColor: Colors.transparent,
                   enableMultiView: true,
                   maxDate: DateTime(DateTime.now().year, DateTime.now().month + 1),
                   initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month - 1),
@@ -148,6 +150,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                     enableSwipeSelection: false,
                   ),
                   headerStyle: DateRangePickerHeaderStyle(
+                    backgroundColor: Colors.transparent,
                     textAlign: TextAlign.start,
                     textStyle: CStyle.headline4(
                       style: const TextStyle(
@@ -158,6 +161,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                   navigationDirection: DateRangePickerNavigationDirection.vertical,
                   monthCellStyle: const DateRangePickerMonthCellStyle(),
                   selectableDayPredicate: widget.selectableDayPredicate,
+                  todayHighlightColor: CColor.primary,
                   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                     try {
                       if (args.value is PickerDateRange) {

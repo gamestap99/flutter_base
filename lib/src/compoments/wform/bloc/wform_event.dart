@@ -52,13 +52,15 @@ class WFormReset extends WFormEvent {
 
 class WFormFinish extends WFormEvent {
   final bool ignoreValidate;
+  final bool ignoreApi;
   final bool showDialog;
 
   WFormFinish({
     required this.showDialog,
     required this.ignoreValidate,
+    required this.ignoreApi,
   });
 
   @override
-  List<Object?> get props => [showDialog, ignoreValidate];
+  List<Object?> get props => [showDialog, ignoreValidate,ignoreApi];
 }

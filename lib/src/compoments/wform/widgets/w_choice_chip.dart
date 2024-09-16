@@ -71,54 +71,57 @@ class _WChoiceChipState extends State<WChoiceChip> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            RichText(
-              text: TextSpan(
-                style: CStyle.paragraph1(
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: CStyle.paragraph1(
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                children: [
-                  TextSpan(
-                    text: widget.label,
-                    style: widget.labelStyle,
-                  ),
-                  if (widget.required)
+                  children: [
                     TextSpan(
-                        text: " *",
-                        style: TextStyle(
-                          color: widget.requiredColor ?? CColor.stateError,
-                          fontSize: CFontSize.headline3,
-                        )),
-                ],
+                      text: widget.label,
+                      style: widget.labelStyle,
+                    ),
+                    if (widget.required)
+                      TextSpan(
+                          text: " *",
+                          style: TextStyle(
+                            color: widget.requiredColor ?? CColor.stateError,
+                            fontSize: CFontSize.headline3,
+                          )),
+                  ],
+                ),
               ),
-            ),
-            const VSpacer(8),
-          ],
-        ),
-        Wrap(
-          spacing: 6.0,
-          children: widget.items
-              .map((e) => ChoiceChip(
-                    label: Text(e.name),
-                    labelStyle: widget.labelStyle,
-                    selected: _value == e.value,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value = selected ? e.value : null;
-                        widget.onChanged(_value);
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
-        SizedBox(height: widget.space ? CSpace.large : 0),
-      ],
+              const VSpacer(8),
+            ],
+          ),
+          Wrap(
+            spacing: 6.0,
+            children: widget.items
+                .map((e) => ChoiceChip(
+                      label: Text(e.name),
+                      selectedColor: CColor.primaryAccent,
+                      selected: _value == e.value,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? e.value : null;
+                          widget.onChanged(_value);
+                        });
+                      },
+                    ))
+                .toList(),
+          ),
+          SizedBox(height: widget.space ? CSpace.large : 0),
+        ],
+      ),
     );
   }
 }
