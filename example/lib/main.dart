@@ -1,5 +1,6 @@
 import 'package:example/screens/cupertino_card_screen.dart';
 import 'package:example/screens/cupertino_range_date_widget.dart';
+import 'package:example/screens/custom_cupertino_page_scaffold_screen.dart';
 import 'package:example/screens/list_cupertino_fetch_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
         "title": "Cupertino Card Screen",
         'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
           return const CupertinoCardScreen();
+        })),
+      },      {
+        "title": "Custom Cupertino Page Scaffold Screen",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const CustomCupertinoPageScaffoldScreen();
         })),
       },
     ];

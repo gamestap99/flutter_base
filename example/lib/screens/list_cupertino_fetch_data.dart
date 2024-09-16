@@ -34,6 +34,7 @@ class _RenderState extends State<_Render> {
       queryParameters: {},
       baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
         leadingColor: CupertinoColors.black,
+        leadingOnPressed: () => Navigator.pop(context),
         title: 'Test',
         trailing: IconButton(
           onPressed: () {
