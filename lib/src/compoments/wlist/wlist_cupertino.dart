@@ -12,6 +12,7 @@ class BaseListCupertinoNavbarData {
   final String? previousPageTitle;
   final Color? leadingColor;
   final void Function()? leadingOnPressed;
+  final bool isAnimatedColor;
 
   BaseListCupertinoNavbarData({
     required this.title,
@@ -20,6 +21,7 @@ class BaseListCupertinoNavbarData {
     this.previousPageTitle,
     this.leadingColor,
     this.leadingOnPressed,
+    this.isAnimatedColor = true,
   });
 }
 
@@ -165,6 +167,35 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     }
   }
 
+  Widget? _middleSliver(BuildContext context){
+    if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
+      return null;
+    }
+
+    return visibility > 0.9 ? Text(widget.baseListCupertinoNavbarData.title) : const Text("");
+  }
+
+
+  Border? _borderNavSliver(BuildContext context){
+    Color kBorderColor = Color(0x4D000000);
+
+    if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
+      return  Border(
+        bottom: BorderSide(
+          color: kBorderColor,
+          width: 0.0, // 0.0 means one physical pixel
+        ),
+      );
+    }
+
+    return Border(
+      bottom: BorderSide(
+        width: 0.0,
+        color: kBorderColor.withOpacity(visibility),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BaseListBloc<T, F>, BaseListState<T>>(
@@ -186,15 +217,10 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
               slivers: [
                 CupertinoSliverNavigationBar(
                   stretch: false,
-                  backgroundColor: CupertinoColors.white.withOpacity(visibility),
-                  middle: visibility > 0.9 ? Text(widget.baseListCupertinoNavbarData.title) : const Text(""),
+                  backgroundColor:!widget.baseListCupertinoNavbarData.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
+                  middle: _middleSliver(context),
                   trailing: widget.baseListCupertinoNavbarData.trailing,
-                  leading: widget.baseListCupertinoNavbarData.leading ??
-                      CupertinoNavigationBarBackButton(
-                        color: widget.baseListCupertinoNavbarData.leadingColor,
-                        previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                        onPressed: widget.baseListCupertinoNavbarData.leadingOnPressed,
-                      ),
+                  leading: widget.baseListCupertinoNavbarData.leading,
                   previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
                   largeTitle: VisibilityDetector(
                     key: const Key('nav-container'),
@@ -212,17 +238,9 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                         });
                       }
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(widget.baseListCupertinoNavbarData.title),
-                    ),
+                    child: Text(widget.baseListCupertinoNavbarData.title),
                   ),
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1,
-                      color: CupertinoColors.white.withOpacity(visibility),
-                    ),
-                  ),
+                  border: _borderNavSliver(context),
                 ),
                 CupertinoSliverRefreshControl(
                   key: _refreshIndicatorKey,

@@ -28,33 +28,60 @@ class _Render extends StatefulWidget {
 }
 
 class _RenderState extends State<_Render> {
+  bool _isAnimatedNavBg = true;
+
   @override
   Widget build(BuildContext context) {
-    return BaseListCupertinoWidget<ProjectEntity, dynamic>(
-      queryParameters: {},
-      baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
-        leadingColor: CupertinoColors.black,
-        leadingOnPressed: () => Navigator.pop(context),
-        title: 'Test',
-        trailing: IconButton(
-          onPressed: () {
-            // _showSheet(context);
-          },
-          icon:  const Icon(CupertinoIcons.line_horizontal_3_decrease),
+    return Scaffold(
+      body: BaseListCupertinoWidget<ProjectEntity, dynamic>(
+        queryParameters: {},
+        baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
+          isAnimatedColor: _isAnimatedNavBg,
+          leadingColor: CupertinoColors.black,
+          previousPageTitle: "Home",
+          leadingOnPressed: () => Navigator.pop(context),
+          title: 'Test',
+          trailing: IconButton(
+            onPressed: () {
+              // _showSheet(context);
+            },
+            icon: const Icon(CupertinoIcons.line_horizontal_3_decrease),
+          ),
         ),
+        opts: BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24)),
+        buildItem: (item, int index) {
+          return Card(
+            child: Column(
+              children: [
+                Text(item.name ?? ''),
+              ],
+            ),
+          );
+        },
       ),
-      opts: BaseListOpts(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 24)
-      ),
-      buildItem: (item, int index) {
-        return Card(
-          child: Column(
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: CupertinoButton(
+          onPressed: () {
+            setState(() {
+              _isAnimatedNavBg = !_isAnimatedNavBg;
+            });
+          },
+          child: Row(
             children: [
-              Text(item.name ?? ''),
+              CupertinoSwitch(
+                value: _isAnimatedNavBg,
+                onChanged: (value){
+                  setState(() {
+                    _isAnimatedNavBg = !value;
+                  });
+                },
+              ),
+              Text("Change Nav Animated Bg")
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

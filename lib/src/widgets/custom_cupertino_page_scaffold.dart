@@ -11,6 +11,7 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
   final String largeTitle;
   final Widget? trailing;
   final bool automaticallyImplyLeading;
+  final bool isAnimatedColor;
 
   const CupertinoSliverPageScaffold({
     super.key,
@@ -21,6 +22,7 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
     this.leadingOnPressed,
     this.trailing,
     this.automaticallyImplyLeading = true,
+    this.isAnimatedColor = true,
     required this.largeTitle,
   });
 
@@ -38,32 +40,12 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     super.initState();
   }
 
-  Widget _largeTitle(BuildContext context) {
-    return VisibilityDetector(
-      key: const Key('nav-container'),
-      onVisibilityChanged: (VisibilityInfo info) {
-        setState(() {
-          visibility = 1 - info.visibleFraction;
-        });
-        if (info.visibleFraction > 0) {
-          setState(() {
-            showSmallTitle = false;
-          });
-        } else {
-          setState(() {
-            showSmallTitle = true;
-          });
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Text(widget.largeTitle),
-      ),
-    );
-  }
+  Widget? _middleSliver(BuildContext context) {
+    if (!widget.isAnimatedColor) {
+      return null;
+    }
 
-  Widget? _middle(BuildContext context) {
-    return visibility > 0.9 ? (Text(widget.largeTitle)) : const Text("");
+    return visibility > 0.9 ? Text(widget.largeTitle) : const Text("");
   }
 
   Widget? _leading(BuildContext context) {
@@ -76,6 +58,26 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     return widget.leading ?? (widget.automaticallyImplyLeading ? barBackButton : null);
   }
 
+  Border? _borderNavSliver(BuildContext context) {
+    Color kBorderColor = Color(0x4D000000);
+
+    if (!widget.isAnimatedColor) {
+      return Border(
+        bottom: BorderSide(
+          color: kBorderColor,
+          width: 0.0, // 0.0 means one physical pixel
+        ),
+      );
+    }
+
+    return Border(
+      bottom: BorderSide(
+        width: 0.0,
+        color: kBorderColor.withOpacity(visibility),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -84,18 +86,30 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
         child: CustomScrollView(
           slivers: [
             CupertinoSliverNavigationBar(
-              backgroundColor: CupertinoColors.white.withOpacity(visibility),
-              middle: _middle(context),
+              backgroundColor: !widget.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
+              middle: _middleSliver(context),
               trailing: widget.trailing,
               leading: _leading(context),
               previousPageTitle: widget.previousPageTitle,
-              largeTitle: _largeTitle(context),
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: CupertinoColors.white.withOpacity(visibility),
-                ),
+              largeTitle: VisibilityDetector(
+                key: const Key('nav-container'),
+                onVisibilityChanged: (VisibilityInfo info) {
+                  setState(() {
+                    visibility = 1 - info.visibleFraction;
+                  });
+                  if (info.visibleFraction > 0) {
+                    setState(() {
+                      showSmallTitle = false;
+                    });
+                  } else {
+                    setState(() {
+                      showSmallTitle = true;
+                    });
+                  }
+                },
+                child: Text(widget.largeTitle),
               ),
+              border: _borderNavSliver(context),
             ),
             ...widget.slivers,
           ],
