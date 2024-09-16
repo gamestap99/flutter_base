@@ -10,15 +10,17 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
   final void Function()? leadingOnPressed;
   final String largeTitle;
   final Widget? trailing;
+  final bool automaticallyImplyLeading;
 
   const CupertinoSliverPageScaffold({
     super.key,
     required this.slivers,
-     this.leading,
-     this.leadingColor,
-     this.previousPageTitle,
-     this.leadingOnPressed,
-     this.trailing,
+    this.leading,
+    this.leadingColor,
+    this.previousPageTitle,
+    this.leadingOnPressed,
+    this.trailing,
+    this.automaticallyImplyLeading = true,
     required this.largeTitle,
   });
 
@@ -36,7 +38,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     super.initState();
   }
 
-  Widget _largeTitle(BuildContext context){
+  Widget _largeTitle(BuildContext context) {
     return VisibilityDetector(
       key: const Key('nav-container'),
       onVisibilityChanged: (VisibilityInfo info) {
@@ -60,8 +62,18 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     );
   }
 
-  Widget? _middle(BuildContext context){
+  Widget? _middle(BuildContext context) {
     return visibility > 0.9 ? (Text(widget.largeTitle)) : const Text("");
+  }
+
+  Widget? _leading(BuildContext context) {
+    Widget barBackButton = CupertinoNavigationBarBackButton(
+      color: widget.leadingColor,
+      previousPageTitle: widget.previousPageTitle,
+      onPressed: widget.leadingOnPressed,
+    );
+
+    return widget.leading ?? (widget.automaticallyImplyLeading ? barBackButton : null);
   }
 
   @override
@@ -75,12 +87,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
               backgroundColor: CupertinoColors.white.withOpacity(visibility),
               middle: _middle(context),
               trailing: widget.trailing,
-              leading: widget.leading ??
-                  CupertinoNavigationBarBackButton(
-                    color: widget.leadingColor,
-                    previousPageTitle: widget.previousPageTitle,
-                    onPressed: widget.leadingOnPressed,
-                  ),
+              leading: _leading(context),
               previousPageTitle: widget.previousPageTitle,
               largeTitle: _largeTitle(context),
               border: Border(
