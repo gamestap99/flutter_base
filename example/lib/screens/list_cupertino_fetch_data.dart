@@ -1,4 +1,5 @@
 import 'package:example/data/fetch_list_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/flutter_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,17 @@ class _RenderState extends State<_Render> {
     return BaseListCupertinoWidget<ProjectEntity, dynamic>(
       queryParameters: {},
       baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
+        leadingColor: CupertinoColors.black,
         title: 'Test',
+        trailing: IconButton(
+          onPressed: () {
+            // _showSheet(context);
+          },
+          icon:  const Icon(CupertinoIcons.line_horizontal_3_decrease),
+        ),
+      ),
+      opts: BaseListOpts(
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 24)
       ),
       buildItem: (item, int index) {
         return Card(

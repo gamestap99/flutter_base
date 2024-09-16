@@ -10,12 +10,16 @@ class BaseListCupertinoNavbarData {
   final Widget? leading;
   final Widget? trailing;
   final String? previousPageTitle;
+  final Color? leadingColor;
+  final void Function()? leadingOnPressed;
 
   BaseListCupertinoNavbarData({
     required this.title,
-     this.leading,
-     this.trailing,
-     this.previousPageTitle,
+    this.leading,
+    this.trailing,
+    this.previousPageTitle,
+    this.leadingColor,
+    this.leadingOnPressed,
   });
 }
 
@@ -86,8 +90,6 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 300)).then((__) {
         if (!bloc.isClosed && bloc.state.status == EBlocStateStatus.idle && bloc.state.items.isEmpty) {
-
-
           bloc.add(BaseListLoadStarted<F>(queryParameters: widget.queryParameters));
         }
       });
@@ -187,7 +189,12 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                   backgroundColor: CupertinoColors.white.withOpacity(visibility),
                   middle: visibility > 0.9 ? Text(widget.baseListCupertinoNavbarData.title) : const Text(""),
                   trailing: widget.baseListCupertinoNavbarData.trailing,
-                  leading: widget.baseListCupertinoNavbarData.leading,
+                  leading: widget.baseListCupertinoNavbarData.leading ??
+                      CupertinoNavigationBarBackButton(
+                        color: widget.baseListCupertinoNavbarData.leadingColor,
+                        previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                        onPressed: widget.baseListCupertinoNavbarData.leadingOnPressed,
+                      ),
                   previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
                   largeTitle: VisibilityDetector(
                     key: const Key('nav-container'),
@@ -205,7 +212,10 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                         });
                       }
                     },
-                    child: Text(widget.baseListCupertinoNavbarData.title),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(widget.baseListCupertinoNavbarData.title),
+                    ),
                   ),
                   border: Border(
                     bottom: BorderSide(
