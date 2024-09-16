@@ -1,7 +1,6 @@
 library flutter_base;
 
 export 'src/core/index.dart';
-export 'src/constants/index.dart';
 export 'src/widgets/index.dart';
 export 'src/compoments/index.dart';
 export 'src/utils/index.dart';

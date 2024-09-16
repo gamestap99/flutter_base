@@ -43,15 +43,13 @@ class _RenderState extends State<_Render> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle labelStyle = CStyle.paragraph1(
-      style: const TextStyle(
-        fontWeight: FontWeight.w500,
-        color: CColor.neutral5,
-      ),
+    TextStyle labelStyle = const TextStyle(
+      fontWeight: FontWeight.w500,
+      color:CupertinoColors.systemGrey,
     );
 
     Color fillColor(WFormState? state) {
-      return CColor.neutral3;
+      return CupertinoColors.lightBackgroundGray;
     }
 
     List<BaseForm> formItems = [
