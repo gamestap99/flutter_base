@@ -7,6 +7,7 @@ class CupertinoCardWidget extends StatelessWidget {
   final double? borderRadius;
   final List<BoxShadow>? boxShadow;
   final EdgeInsetsGeometry? padding;
+  final Clip clipBehavior;
 
   const CupertinoCardWidget({
     super.key,
@@ -15,6 +16,7 @@ class CupertinoCardWidget extends StatelessWidget {
     this.borderRadius,
     this.boxShadow,
     this.padding,
+    this.clipBehavior = Clip.none,
   });
 
   @override
@@ -23,7 +25,8 @@ class CupertinoCardWidget extends StatelessWidget {
       color: Colors.transparent,
       borderOnForeground: false,
       child: Container(
-        padding:  padding ?? const EdgeInsets.all(12.0),
+        clipBehavior: clipBehavior,
+        padding: padding ?? const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           color: color ?? CupertinoColors.white, // Màu nền trắng hoặc gần trắng
           borderRadius: BorderRadius.circular(borderRadius ?? 12.0), // Bo tròn viền mềm mại theo HIG
