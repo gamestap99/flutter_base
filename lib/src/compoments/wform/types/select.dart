@@ -20,6 +20,7 @@ class MFormSelectItem extends BaseForm {
     super.labelStyle,
     super.validators,
     super.hint,
+    super.fillColor,
     this.items,
   });
 }

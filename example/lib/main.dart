@@ -1,6 +1,7 @@
 import 'package:example/screens/cupertino_card_screen.dart';
 import 'package:example/screens/cupertino_range_date_widget.dart';
 import 'package:example/screens/custom_cupertino_page_scaffold_screen.dart';
+import 'package:example/screens/demo_form/demo_form_screen.dart';
 import 'package:example/screens/list_cupertino_fetch_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         SfGlobalLocalizations.delegate,
       ],
-      supportedLocales: const <Locale>[Locale('en', 'US'), Locale('ar', 'AE'),Locale('vi')],
+      supportedLocales: const <Locale>[Locale('en', 'US'), Locale('ar', 'AE'), Locale('vi')],
       locale: const Locale('vi'),
       builder: (context, Widget? child) => CupertinoTheme(
         data: CupertinoThemeData(
@@ -52,28 +53,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    List<Map<String,dynamic>> items = [
+    List<Map<String, dynamic>> items = [
       {
         "title": "List Cupertino fetch data",
-        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
-          return const ListCupertinoFetchData();
-        })),
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const ListCupertinoFetchData();
+            })),
       },
       {
         "title": "Cupertino Range Date",
-        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
-          return const CupertinoRangeDateScreen();
-        })),
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CupertinoRangeDateScreen();
+            })),
       },
       {
         "title": "Cupertino Card Screen",
-        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
-          return const CupertinoCardScreen();
-        })),
-      },      {
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CupertinoCardScreen();
+            })),
+      },
+      {
         "title": "Custom Cupertino Page Scaffold Screen",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CustomCupertinoPageScaffoldScreen();
+            })),
+      },
+      {
+        "title": "Demo form",
         'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
-          return const CustomCupertinoPageScaffoldScreen();
+          return const DemoFormScreen();
         })),
       },
     ];
@@ -83,13 +91,17 @@ class _MyHomePageState extends State<MyHomePage> {
         middle: Text(widget.title),
       ),
       child: ListView(
-        children: items.map((e) => Card(
-          child: ListTile(
-            onTap: e['func'],
-            title: Text(e['title']),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
-        ),).toList(),
+        children: items
+            .map(
+              (e) => Card(
+                child: ListTile(
+                  onTap: e['func'],
+                  title: Text(e['title']),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                ),
+              ),
+            )
+            .toList(),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

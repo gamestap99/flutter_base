@@ -127,125 +127,128 @@ class _WInputState extends State<WInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        widget.stackedLabel && widget.label.isNotEmpty
-            ? Column(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      style: CStyle.paragraph1(
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.stackedLabel && widget.label.isNotEmpty
+              ? Column(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: CStyle.paragraph1(
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      children: [
-                        TextSpan(
-                          text: widget.label,
-                          style: widget.labelStyle,
-                        ),
-                        if (widget.required)
+                        children: [
                           TextSpan(
-                              text: " *",
-                              style: TextStyle(
-                                color: widget.requiredColor ?? CColor.stateError,
-                                fontSize: CFontSize.headline3,
-                              )),
-                      ],
+                            text: widget.label,
+                            style: widget.labelStyle,
+                          ),
+                          if (widget.required)
+                            TextSpan(
+                                text: " *",
+                                style: TextStyle(
+                                  color: widget.requiredColor ?? CColor.stateError,
+                                  fontSize: CFontSize.headline3,
+                                )),
+                        ],
+                      ),
                     ),
+                    const VSpacer(8),
+                  ],
+                )
+              : Container(),
+          TextFormField(
+            key: _formState,
+            focusNode: focusNode,
+            controller: controller,
+            onTap: () {
+              if (!widget.focus && widget.onTap != null) {
+                widget.onTap!();
+              }
+            },
+            readOnly: widget.onTap != null,
+            textInputAction: widget.textInputAction ?? TextInputAction.next,
+            style: widget.style ?? CStyle.paragraph1(),
+            onChanged: (String text) {
+              if (widget.number && !widget.name.toLowerCase().contains('phone')) {
+                text = text.replaceAll('.', '');
+              }
+              widget.onChanged?.call(text);
+            },
+            validator: widget.validator,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            obscureText: visible,
+            keyboardType: widget.number ? TextInputType.number : widget.keyboardType,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              errorText: widget.errorText,
+              labelText: !widget.stackedLabel ? (widget.hintText ?? widget.label) : null,
+              hintStyle: widget.hintStyle ??
+                  CStyle.paragraph1(
+                      style: const TextStyle(
+                    color: CColor.textDark3,
+                  )),
+              labelStyle: widget.labelStyle ??
+                  TextStyle(
+                    color: CColor.black.shade400,
+                    fontSize: CFontSize.paragraph1,
                   ),
-                  const VSpacer(8),
-                ],
-              )
-            : Container(),
-        TextFormField(
-          key: _formState,
-          focusNode: focusNode,
-          controller: controller,
-          onTap: () {
-            if (!widget.focus && widget.onTap != null) {
-              widget.onTap!();
-            }
-          },
-          readOnly: widget.onTap != null,
-          textInputAction: widget.textInputAction ?? TextInputAction.next,
-          style: widget.style ?? CStyle.paragraph1(),
-          onChanged: (String text) {
-            if (widget.number && !widget.name.toLowerCase().contains('phone')) {
-              text = text.replaceAll('.', '');
-            }
-            widget.onChanged?.call(text);
-          },
-          validator: widget.validator,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          obscureText: visible,
-          keyboardType: widget.number ? TextInputType.number : widget.keyboardType,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            errorText: widget.errorText,
-            labelText: !widget.stackedLabel ? (widget.hintText ?? widget.label) : null,
-            hintStyle: widget.hintStyle ??
-                CStyle.paragraph1(
-                    style: const TextStyle(
-                  color: CColor.textDark3,
-                )),
-            labelStyle: widget.labelStyle ??
-                TextStyle(
-                  color: CColor.black.shade400,
-                  fontSize: CFontSize.paragraph1,
-                ),
-            prefixIcon: widget.icon,
-            suffixIcon: widget.password
-                ? GestureDetector(
-                    onTap: () => setState(() {
-                      visible = !visible;
-                    }),
-                    child: Icon(
-                      visible ? Icons.visibility : Icons.visibility_off,
-                      color: widget.iconColor ?? CColor.black.shade300,
-                    ),
-                  )
-                : widget.suffix,
-            enabled: widget.enabled,
-            focusedBorder: widget.focusedBorder ??
-                const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
-                  borderSide: BorderSide(color: CColor.primary, width: 0),
-                ),
-            disabledBorder: widget.disabledBorder ??
-                const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
-                  borderSide: BorderSide(color: CColor.primary, width: 0),
-                ),
-            enabledBorder: widget.enabledBorder ??
-                OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(CSpace.medium)),
-                  borderSide: BorderSide(color: CColor.primary.withOpacity(widget.value != '' ? 0.3 : 0), width: 0),
-                ),
-            errorBorder: widget.errorBorder ??
-                const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
-                  borderSide: BorderSide(color: CColor.stateError, width: 0),
-                ),
-            focusedErrorBorder: widget.errorBorder ??
-                const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
-                  borderSide: BorderSide(color: CColor.stateError, width: 0),
-                ),
-            fillColor: widget.fillColor ?? Colors.white,
-            contentPadding: EdgeInsets.symmetric(
-              vertical: widget.maxLines > 1 ? CSpace.medium : 15,
-              horizontal: widget.icon != null ? 0 : 20,
+              prefixIcon: widget.icon,
+              suffixIcon: widget.password
+                  ? GestureDetector(
+                      onTap: () => setState(() {
+                        visible = !visible;
+                      }),
+                      child: Icon(
+                        visible ? Icons.visibility : Icons.visibility_off,
+                        color: widget.iconColor ?? CColor.black.shade300,
+                      ),
+                    )
+                  : widget.suffix,
+              enabled: widget.enabled,
+              focusedBorder: widget.focusedBorder ??
+                  const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
+                    borderSide: BorderSide(color: CColor.primary, width: 0),
+                  ),
+              disabledBorder: widget.disabledBorder ??
+                  const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
+                    borderSide: BorderSide(color: CColor.primary, width: 0),
+                  ),
+              enabledBorder: widget.enabledBorder ??
+                  OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(CSpace.medium)),
+                    borderSide: BorderSide(color: CColor.primary.withOpacity(widget.value != '' ? 0.3 : 0), width: 0),
+                  ),
+              errorBorder: widget.errorBorder ??
+                  const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
+                    borderSide: BorderSide(color: CColor.stateError, width: 0),
+                  ),
+              focusedErrorBorder: widget.errorBorder ??
+                  const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(CSpace.medium)),
+                    borderSide: BorderSide(color: CColor.stateError, width: 0),
+                  ),
+              fillColor: widget.fillColor ?? Colors.white,
+              contentPadding: EdgeInsets.symmetric(
+                vertical: widget.maxLines > 1 ? CSpace.medium : 15,
+                horizontal: widget.icon != null ? 0 : 20,
+              ),
+              filled: true,
             ),
-            filled: true,
+            minLines: widget.minLines,
+            maxLines: widget.maxLines,
+            inputFormatters: widget.inputFormatters ?? (widget.number && !widget.name.toLowerCase().contains('phone') ? [ThousandFormatter()] : null),
           ),
-          minLines: widget.minLines,
-          maxLines: widget.maxLines,
-          inputFormatters: widget.inputFormatters ?? (widget.number && !widget.name.toLowerCase().contains('phone') ? [ThousandFormatter()] : null),
-        ),
-        SizedBox(height: widget.space ? CSpace.large : 0),
-      ],
+          SizedBox(height: widget.space ? CSpace.large : 0),
+        ],
+      ),
     );
   }
 }

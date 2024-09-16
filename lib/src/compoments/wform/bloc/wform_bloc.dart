@@ -75,7 +75,7 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
   }
 
   void _onFinish(WFormFinish event, Emitter<WFormState> emit) async {
-    if (api == null) return;
+    if (api == null && !event.ignoreApi) return;
 
     if (event.ignoreValidate || (_formKey.currentState?.validate() ?? false)) {
       return await runSafeCall<ItemResEntity<T>>(
@@ -154,10 +154,12 @@ class WFormBloc<T> extends BlocBaseMain<WFormEvent, WFormState> {
   void onFinish({
     bool showDialog = false,
     bool ignoreValidate = false,
+    bool ignoreApi = false,
   }) {
     add(WFormFinish(
       showDialog: showDialog,
       ignoreValidate: ignoreValidate,
+      ignoreApi: ignoreApi,
     ));
   }
 }
