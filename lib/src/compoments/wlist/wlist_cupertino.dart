@@ -6,7 +6,8 @@ import 'package:flutter_base/flutter_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BaseListCupertinoNavbarData {
-  final String title;
+  final Widget largeTitle;
+  final Widget? middle;
   final Widget? leading;
   final Widget? trailing;
   final String? previousPageTitle;
@@ -15,7 +16,8 @@ class BaseListCupertinoNavbarData {
   final bool isAnimatedColor;
 
   BaseListCupertinoNavbarData({
-    required this.title,
+    required this.largeTitle,
+    this.middle,
     this.leading,
     this.trailing,
     this.previousPageTitle,
@@ -169,15 +171,15 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
 
   Widget? _middleSliver(BuildContext context){
     if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
-      return null;
+      return widget.baseListCupertinoNavbarData.middle;
     }
 
-    return visibility > 0.9 ? Text(widget.baseListCupertinoNavbarData.title) : const Text("");
+    return visibility > 0.9 ? (widget.baseListCupertinoNavbarData.middle ?? widget.baseListCupertinoNavbarData.largeTitle) : const Text("");
   }
 
 
   Border? _borderNavSliver(BuildContext context){
-    Color kBorderColor = Color(0x4D000000);
+    Color kBorderColor = const Color(0x4D000000);
 
     if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
       return  Border(
@@ -238,7 +240,7 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                         });
                       }
                     },
-                    child: Text(widget.baseListCupertinoNavbarData.title),
+                    child: widget.baseListCupertinoNavbarData.largeTitle,
                   ),
                   border: _borderNavSliver(context),
                 ),

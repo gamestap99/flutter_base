@@ -40,7 +40,7 @@ class _RenderState extends State<_Render> {
           leadingColor: CupertinoColors.black,
           previousPageTitle: "Home",
           leadingOnPressed: () => Navigator.pop(context),
-          title: 'Test',
+          largeTitle: Text('Test'),
           trailing: IconButton(
             onPressed: () {
               // _showSheet(context);
@@ -48,7 +48,7 @@ class _RenderState extends State<_Render> {
             icon: const Icon(CupertinoIcons.line_horizontal_3_decrease),
           ),
         ),
-        opts: BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24)),
+        opts: const BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24)),
         buildItem: (item, int index) {
           return Card(
             child: Column(

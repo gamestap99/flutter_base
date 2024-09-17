@@ -8,10 +8,11 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
   final Color? leadingColor;
   final String? previousPageTitle;
   final void Function()? leadingOnPressed;
-  final String largeTitle;
   final Widget? trailing;
   final bool automaticallyImplyLeading;
   final bool isAnimatedColor;
+  final Widget largeTitle;
+  final Widget? middle;
 
   const CupertinoSliverPageScaffold({
     super.key,
@@ -21,6 +22,7 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
     this.previousPageTitle,
     this.leadingOnPressed,
     this.trailing,
+    this.middle,
     this.automaticallyImplyLeading = true,
     this.isAnimatedColor = true,
     required this.largeTitle,
@@ -45,7 +47,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
       return null;
     }
 
-    return visibility > 0.9 ? Text(widget.largeTitle) : const Text("");
+    return visibility > 0.9 ? (widget.middle ?? widget.largeTitle) : const Text("");
   }
 
   Widget? _leading(BuildContext context) {
@@ -59,7 +61,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
   }
 
   Border? _borderNavSliver(BuildContext context) {
-    Color kBorderColor = Color(0x4D000000);
+    Color kBorderColor = const Color(0x4D000000);
 
     if (!widget.isAnimatedColor) {
       return Border(
@@ -107,7 +109,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
                     });
                   }
                 },
-                child: Text(widget.largeTitle),
+                child: widget.largeTitle,
               ),
               border: _borderNavSliver(context),
             ),
