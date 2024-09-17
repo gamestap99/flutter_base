@@ -43,11 +43,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
   }
 
   Widget? _middleSliver(BuildContext context) {
-    if (!widget.isAnimatedColor) {
-      return null;
-    }
-
-    return visibility > 0.9 ? (widget.middle ?? widget.largeTitle) : const Text("");
+    return widget.middle;
   }
 
   Widget? _leading(BuildContext context) {
@@ -96,9 +92,12 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
               largeTitle: VisibilityDetector(
                 key: const Key('nav-container'),
                 onVisibilityChanged: (VisibilityInfo info) {
-                  setState(() {
-                    visibility = 1 - info.visibleFraction;
-                  });
+                  if(info.visibleFraction < 1){
+                    setState(() {
+                      visibility = 1 - info.visibleFraction;
+                    });
+                  }
+
                   if (info.visibleFraction > 0) {
                     setState(() {
                       showSmallTitle = false;
