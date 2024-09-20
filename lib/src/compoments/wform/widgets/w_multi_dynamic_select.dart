@@ -13,6 +13,7 @@ class WMultiDynamicSelect extends StatefulWidget {
   final double? botSpace;
   final void Function(List<MultiSelectItem<dynamic>> item) onChanged;
   final void Function(void Function(List<MultiSelectItem<dynamic>> Function())) onCallbackBuilder;
+  final Color? chipColor;
 
   const WMultiDynamicSelect({
     Key? key,
@@ -22,6 +23,7 @@ class WMultiDynamicSelect extends StatefulWidget {
     required this.onChanged,
     this.required = false,
     this.botSpace,
+    this.chipColor,
   }) : super(key: key);
 
   @override
@@ -79,6 +81,7 @@ class _WMultiDynamicSelectState extends State<WMultiDynamicSelect> {
           ),
           onCallbackBuilder: widget.onCallbackBuilder,
           chipDisplay: MultiSelectChipDisplay(
+            colorator: (state) => widget.chipColor,
             chipWidth: 200,
             // icon:  Icon(Icons.close),
           ),
