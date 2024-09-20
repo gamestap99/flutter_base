@@ -433,7 +433,7 @@ class _RenderState extends State<_Render> {
 }
 
 final List<_SelectItem> selectItems = [
-  _SelectItem('1', 'One'),
+  _SelectItem('1', 'One One OneOnevOneOneOneOne OneOne'),
   _SelectItem('2', 'Two'),
   _SelectItem('3', 'Three'),
   _SelectItem('4', 'Four'),

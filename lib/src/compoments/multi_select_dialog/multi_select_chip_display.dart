@@ -140,8 +140,10 @@ class MultiSelectChipDisplay<V> extends StatelessWidget {
         //         color: colorator != null && colorator!(item.value) != null ? colorator!(item.value)!.withOpacity(1) : icon!.color ?? Theme.of(context).primaryColor,
         //       )
         //     : null,
-        label: SizedBox(
-          width: chipWidth,
+        label: Container(
+          constraints: const BoxConstraints(
+            maxWidth: 200,
+          ),
           child: Text(
             item.label,
             overflow: TextOverflow.ellipsis,
@@ -152,9 +154,7 @@ class MultiSelectChipDisplay<V> extends StatelessWidget {
                       : colorator!(item.value)
                   : textStyle != null && textStyle!.color != null
                       ? textStyle!.color
-                      : chipColor != null
-                          ? chipColor!.withOpacity(1)
-                          : null,
+                      : chipColor?.withOpacity(1),
               fontSize: textStyle?.fontSize,
             ),
           ),

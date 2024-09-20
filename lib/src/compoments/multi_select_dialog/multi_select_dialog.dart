@@ -286,31 +286,62 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
                         ),
                       ))),
       ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: <Widget>[
-        TextButton(
-          child: widget.cancelText ??
-              Text(
-                "CANCEL",
-                style: TextStyle(
-                  color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onCancelTap(context, widget.initialValue);
+        Checkbox(
+          value: _selectedValues.isNotEmpty && _selectedValues.length == _items.length,
+          onChanged: (isChecked) {
+            setState(() {
+              _selectedValues = [];
+              if (isChecked == true) {
+                _selectedValues.addAll(_items.map((e) {
+                  e.selected = true;
+                  return e.value;
+                }));
+              } else {
+                for (var e in _items) {
+                  e.selected = false;
+                }
+              }
+
+              if (widget.separateSelectedItems) {
+                _items = widget.separateSelected(_items);
+              }
+            });
+            if (widget.onSelectionChanged != null) {
+              widget.onSelectionChanged!(_selectedValues);
+            }
           },
         ),
-        TextButton(
-          child: widget.confirmText ??
-              Text(
-                'OK',
-                style: TextStyle(
-                  color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
-          },
-        )
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              child: widget.cancelText ??
+                  Text(
+                    "CANCEL",
+                    style: TextStyle(
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
+                    ),
+                  ),
+              onPressed: () {
+                widget.onCancelTap(context, widget.initialValue);
+              },
+            ),
+            TextButton(
+              child: widget.confirmText ??
+                  Text(
+                    'OK',
+                    style: TextStyle(
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
+                    ),
+                  ),
+              onPressed: () {
+                widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
+              },
+            ),
+          ],
+        ),
       ],
     );
   }
