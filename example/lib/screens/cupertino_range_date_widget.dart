@@ -19,6 +19,7 @@ class _CupertinoRangeDateScreenState extends State<CupertinoRangeDateScreen> {
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: CupertinoRangeDateWidget(
+            maxDate: DateTime.now(),
             actionBottom: (DateTime? start, DateTime? end) {
               return CupertinoButton(
                 onPressed: (){

@@ -8,6 +8,8 @@ import '../constants/color.dart';
 class CupertinoRangeDateWidget extends StatefulWidget {
   final DateTime? start;
   final DateTime? end;
+  final DateTime? minDate;
+  final DateTime? maxDate;
   final String outputFormat;
   final bool Function(DateTime)? selectableDayPredicate;
   final String helperText;
@@ -35,6 +37,8 @@ class CupertinoRangeDateWidget extends StatefulWidget {
     this.labelStart = "Ngày bắt đầu",
     this.labelEnd = "Ngày kết thúc",
     this.okText = "Đồng ý",
+    this.minDate,
+    this.maxDate,
   });
 
   @override
@@ -105,7 +109,8 @@ class _CupertinoRangeDateWidgetState extends State<CupertinoRangeDateWidget> {
                 navigationMode: DateRangePickerNavigationMode.scroll,
                 navigationDirection: DateRangePickerNavigationDirection.vertical,
                 enableMultiView: true,
-                maxDate: DateTime(DateTime.now().year, DateTime.now().month + 1),
+                minDate: widget.minDate,
+                maxDate: widget.maxDate ?? DateTime(DateTime.now().year, DateTime.now().month + 1),
                 initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month - 1),
                 selectionTextStyle: widget.selectionTextStyle ?? textStyle,
                 selectionColor: CColor.primary,
@@ -190,21 +195,23 @@ class _RowDate extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Builder(builder: (context){
-              String txt = '';
+            Builder(
+              builder: (context) {
+                String txt = '';
 
-              if (date != null) {
-                txt = DateFormat(outputFormat).format(date!);
-              }
+                if (date != null) {
+                  txt = DateFormat(outputFormat).format(date!);
+                }
 
-              return Text(
-                txt,
-                style: textStyle.copyWith(
-                  color: active ? CColor.textDark2 : CColor.textDark3,
-                  fontWeight: FontWeight.w600,
-                ),
-              );
-            },),
+                return Text(
+                  txt,
+                  style: textStyle.copyWith(
+                    color: active ? CColor.textDark2 : CColor.textDark3,
+                    fontWeight: FontWeight.w600,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
