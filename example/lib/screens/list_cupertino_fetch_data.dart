@@ -29,6 +29,7 @@ class _Render extends StatefulWidget {
 
 class _RenderState extends State<_Render> {
   bool _isAnimatedNavBg = true;
+  bool _isLargeTitle = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,7 @@ class _RenderState extends State<_Render> {
       body: BaseListCupertinoWidget<ProjectEntity, dynamic>(
         queryParameters: {},
         baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
+          isLargeTitle: _isLargeTitle,
           isAnimatedColor: _isAnimatedNavBg,
           leadingColor: CupertinoColors.black,
           previousPageTitle: "Home",
@@ -61,25 +63,50 @@ class _RenderState extends State<_Render> {
       ),
       bottomNavigationBar: Container(
         color: Colors.white,
-        child: CupertinoButton(
-          onPressed: () {
-            setState(() {
-              _isAnimatedNavBg = !_isAnimatedNavBg;
-            });
-          },
-          child: Row(
-            children: [
-              CupertinoSwitch(
-                value: _isAnimatedNavBg,
-                onChanged: (value){
-                  setState(() {
-                    _isAnimatedNavBg = !value;
-                  });
-                },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CupertinoButton(
+              onPressed: () {
+                setState(() {
+                  _isAnimatedNavBg = !_isAnimatedNavBg;
+                });
+              },
+              child: Row(
+                children: [
+                  CupertinoSwitch(
+                    value: _isAnimatedNavBg,
+                    onChanged: (value){
+                      setState(() {
+                        _isAnimatedNavBg = !value;
+                      });
+                    },
+                  ),
+                  Text("Change Nav Animated Bg")
+                ],
               ),
-              Text("Change Nav Animated Bg")
-            ],
-          ),
+            ),
+            CupertinoButton(
+              onPressed: () {
+                setState(() {
+                  _isLargeTitle = !_isLargeTitle;
+                });
+              },
+              child: Row(
+                children: [
+                  CupertinoSwitch(
+                    value: _isLargeTitle,
+                    onChanged: (value){
+                      setState(() {
+                        _isLargeTitle = !value;
+                      });
+                    },
+                  ),
+                  const Text("Change Large to Small Title")
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

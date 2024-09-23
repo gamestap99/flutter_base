@@ -14,6 +14,7 @@ class BaseListCupertinoNavbarData {
   final Color? leadingColor;
   final void Function()? leadingOnPressed;
   final bool isAnimatedColor;
+  final bool isLargeTitle;
 
   BaseListCupertinoNavbarData({
     required this.largeTitle,
@@ -24,6 +25,7 @@ class BaseListCupertinoNavbarData {
     this.leadingColor,
     this.leadingOnPressed,
     this.isAnimatedColor = true,
+    this.isLargeTitle = true,
   });
 }
 
@@ -169,20 +171,19 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     }
   }
 
-  Widget? _middleSliver(BuildContext context){
-    if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
+  Widget? _middleSliver(BuildContext context) {
+    if (!widget.baseListCupertinoNavbarData.isAnimatedColor) {
       return widget.baseListCupertinoNavbarData.middle;
     }
 
     return visibility > 0.9 ? (widget.baseListCupertinoNavbarData.middle ?? widget.baseListCupertinoNavbarData.largeTitle) : const Text("");
   }
 
-
-  Border? _borderNavSliver(BuildContext context){
+  Border? _borderNavSliver(BuildContext context) {
     Color kBorderColor = const Color(0x4D000000);
 
-    if(!widget.baseListCupertinoNavbarData.isAnimatedColor){
-      return  Border(
+    if (!widget.baseListCupertinoNavbarData.isAnimatedColor) {
+      return Border(
         bottom: BorderSide(
           color: kBorderColor,
           width: 0.0, // 0.0 means one physical pixel
@@ -208,6 +209,15 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
       buildWhen: (pev, cur) => pev.status != cur.status,
       builder: (context, state) {
         return CupertinoPageScaffold(
+          navigationBar: widget.baseListCupertinoNavbarData.isLargeTitle == false
+              ? CupertinoNavigationBar(
+                  middle: widget.baseListCupertinoNavbarData.largeTitle,
+                  trailing: widget.baseListCupertinoNavbarData.trailing,
+                  leading: widget.baseListCupertinoNavbarData.leading,
+                  previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                  backgroundColor: CupertinoColors.white.withOpacity(1),
+                )
+              : null,
           child: Scrollbar(
             // thumbVisibility: true,
             controller: _scrollController,
@@ -217,33 +227,34 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               slivers: [
-                CupertinoSliverNavigationBar(
-                  stretch: false,
-                  backgroundColor:!widget.baseListCupertinoNavbarData.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
-                  middle: _middleSliver(context),
-                  trailing: widget.baseListCupertinoNavbarData.trailing,
-                  leading: widget.baseListCupertinoNavbarData.leading,
-                  previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                  largeTitle: VisibilityDetector(
-                    key: const Key('nav-container'),
-                    onVisibilityChanged: (VisibilityInfo info) {
-                      setState(() {
-                        visibility = 1 - info.visibleFraction;
-                      });
-                      if (info.visibleFraction > 0) {
+                if (widget.baseListCupertinoNavbarData.isLargeTitle)
+                  CupertinoSliverNavigationBar(
+                    stretch: false,
+                    backgroundColor: !widget.baseListCupertinoNavbarData.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
+                    middle: _middleSliver(context),
+                    trailing: widget.baseListCupertinoNavbarData.trailing,
+                    leading: widget.baseListCupertinoNavbarData.leading,
+                    previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                    largeTitle: VisibilityDetector(
+                      key: const Key('nav-container'),
+                      onVisibilityChanged: (VisibilityInfo info) {
                         setState(() {
-                          showSmallTitle = false;
+                          visibility = 1 - info.visibleFraction;
                         });
-                      } else {
-                        setState(() {
-                          showSmallTitle = true;
-                        });
-                      }
-                    },
-                    child: widget.baseListCupertinoNavbarData.largeTitle,
+                        if (info.visibleFraction > 0) {
+                          setState(() {
+                            showSmallTitle = false;
+                          });
+                        } else {
+                          setState(() {
+                            showSmallTitle = true;
+                          });
+                        }
+                      },
+                      child: widget.baseListCupertinoNavbarData.largeTitle,
+                    ),
+                    border: _borderNavSliver(context),
                   ),
-                  border: _borderNavSliver(context),
-                ),
                 CupertinoSliverRefreshControl(
                   key: _refreshIndicatorKey,
                   onRefresh: _onRefresh,
