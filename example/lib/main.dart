@@ -3,6 +3,8 @@ import 'package:example/screens/cupertino_range_date_widget.dart';
 import 'package:example/screens/custom_cupertino_page_scaffold_screen.dart';
 import 'package:example/screens/demo_form/demo_form_screen.dart';
 import 'package:example/screens/list_cupertino_fetch_data.dart';
+import 'package:example/screens/list_fetch_data.dart';
+import 'package:example/screens/test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -82,6 +84,17 @@ class _MyHomePageState extends State<MyHomePage> {
         "title": "Demo form",
         'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
           return const DemoFormScreen();
+        })),
+      },
+      {
+        "title": "Demo Test",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const Test();
+        })),
+      },  {
+        "title": "ListFetchData",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const ListFetchData();
         })),
       },
     ];
