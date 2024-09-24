@@ -218,88 +218,84 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
                   backgroundColor: CupertinoColors.white.withOpacity(1),
                 )
               : null,
-          child: Scrollbar(
-            // thumbVisibility: true,
+          child: CustomScrollView(
             controller: _scrollController,
-            child: CustomScrollView(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              slivers: [
-                if (widget.baseListCupertinoNavbarData.isLargeTitle)
-                  CupertinoSliverNavigationBar(
-                    stretch: false,
-                    backgroundColor: !widget.baseListCupertinoNavbarData.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
-                    middle: _middleSliver(context),
-                    trailing: widget.baseListCupertinoNavbarData.trailing,
-                    leading: widget.baseListCupertinoNavbarData.leading,
-                    previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                    largeTitle: VisibilityDetector(
-                      key: const Key('nav-container'),
-                      onVisibilityChanged: (VisibilityInfo info) {
-                        setState(() {
-                          visibility = 1 - info.visibleFraction;
-                        });
-                        if (info.visibleFraction > 0) {
-                          setState(() {
-                            showSmallTitle = false;
-                          });
-                        } else {
-                          setState(() {
-                            showSmallTitle = true;
-                          });
-                        }
-                      },
-                      child: widget.baseListCupertinoNavbarData.largeTitle,
-                    ),
-                    border: _borderNavSliver(context),
-                  ),
-                CupertinoSliverRefreshControl(
-                  key: _refreshIndicatorKey,
-                  onRefresh: _onRefresh,
-                ),
-                if (widget.buildTop != null)
-                  SliverToBoxAdapter(
-                    child: widget.buildTop?.call(state),
-                  ),
-                Builder(builder: (context) {
-                  switch (state.status) {
-                    case EBlocStateStatus.idle:
-                    case EBlocStateStatus.loading:
-                      {
-                        if (widget.customBuildLoading != null) {
-                          return widget.customBuildLoading!.call();
-                        } else if (widget.buildLoading == null) {
-                          return const SliverFillRemaining(
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        } else {
-                          return _buildLoading(state);
-                        }
-                      }
-
-                    case EBlocStateStatus.fail:
-                      return _buildFailure();
-
-                    case EBlocStateStatus.success:
-                    case EBlocStateStatus.loadingMore:
-                    case EBlocStateStatus.loadMoreFailure:
-                    case EBlocStateStatus.loadMoreSuccess:
-                    case EBlocStateStatus.loadingRefresh:
-                    case EBlocStateStatus.loadRefreshFailure:
-                    case EBlocStateStatus.loadRefreshSuccess:
-                      return _buildLoaded();
-
-                    default:
-                      return const SizedBox.shrink();
-                  }
-                }),
-                if (state.items.isNotEmpty) _buildLoadMore(),
-              ],
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
+            slivers: [
+              if (widget.baseListCupertinoNavbarData.isLargeTitle)
+                CupertinoSliverNavigationBar(
+                  stretch: false,
+                  backgroundColor: !widget.baseListCupertinoNavbarData.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
+                  middle: _middleSliver(context),
+                  trailing: widget.baseListCupertinoNavbarData.trailing,
+                  leading: widget.baseListCupertinoNavbarData.leading,
+                  previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                  largeTitle: VisibilityDetector(
+                    key: const Key('nav-container'),
+                    onVisibilityChanged: (VisibilityInfo info) {
+                      setState(() {
+                        visibility = 1 - info.visibleFraction;
+                      });
+                      if (info.visibleFraction > 0) {
+                        setState(() {
+                          showSmallTitle = false;
+                        });
+                      } else {
+                        setState(() {
+                          showSmallTitle = true;
+                        });
+                      }
+                    },
+                    child: widget.baseListCupertinoNavbarData.largeTitle,
+                  ),
+                  border: _borderNavSliver(context),
+                ),
+              CupertinoSliverRefreshControl(
+                key: _refreshIndicatorKey,
+                onRefresh: _onRefresh,
+              ),
+              if (widget.buildTop != null)
+                SliverToBoxAdapter(
+                  child: widget.buildTop?.call(state),
+                ),
+              Builder(builder: (context) {
+                switch (state.status) {
+                  case EBlocStateStatus.idle:
+                  case EBlocStateStatus.loading:
+                    {
+                      if (widget.customBuildLoading != null) {
+                        return widget.customBuildLoading!.call();
+                      } else if (widget.buildLoading == null) {
+                        return const SliverFillRemaining(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else {
+                        return _buildLoading(state);
+                      }
+                    }
+
+                  case EBlocStateStatus.fail:
+                    return _buildFailure();
+
+                  case EBlocStateStatus.success:
+                  case EBlocStateStatus.loadingMore:
+                  case EBlocStateStatus.loadMoreFailure:
+                  case EBlocStateStatus.loadMoreSuccess:
+                  case EBlocStateStatus.loadingRefresh:
+                  case EBlocStateStatus.loadRefreshFailure:
+                  case EBlocStateStatus.loadRefreshSuccess:
+                    return _buildLoaded();
+
+                  default:
+                    return const SizedBox.shrink();
+                }
+              }),
+              if (state.items.isNotEmpty) _buildLoadMore(),
+            ],
           ),
         );
       },
