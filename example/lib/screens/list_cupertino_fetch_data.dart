@@ -37,12 +37,11 @@ class _RenderState extends State<_Render> {
       body: BaseListCupertinoWidget<ProjectEntity, dynamic>(
         queryParameters: {},
         baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
-          isLargeTitle: _isLargeTitle,
-          isAnimatedColor: _isAnimatedNavBg,
           leadingColor: CupertinoColors.black,
           previousPageTitle: "Home",
           leadingOnPressed: () => Navigator.pop(context),
-          largeTitle: Text('Test'),
+          largeTitle: const Text('Test'),
+          middle: const Text("aa"),
           trailing: IconButton(
             onPressed: () {
               // _showSheet(context);
