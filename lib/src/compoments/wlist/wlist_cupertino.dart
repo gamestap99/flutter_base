@@ -82,7 +82,7 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
   late final ScrollController _scrollController;
   final _deBouncer = Debouncer(milliseconds: 350);
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-  double visibility = 0.0;
+  final ValueNotifier<double> visibilityNotifier = ValueNotifier<double>(0.0);
 
   @override
   void initState() {
@@ -112,6 +112,7 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
   @override
   void dispose() {
     _deBouncer.destroy();
+    visibilityNotifier.dispose();
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
@@ -175,7 +176,7 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     return widget.baseListCupertinoNavbarData.middle;
   }
 
-  Border? _borderNavSliver(BuildContext context) {
+  Border? _borderNavSliver(BuildContext context,double visibility) {
     Color kBorderColor = const Color(0x4D000000);
 
     return Border(
@@ -202,34 +203,34 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
               parent: AlwaysScrollableScrollPhysics(),
             ),
             slivers: [
-              CupertinoSliverNavigationBar(
-                stretch: false,
-                backgroundColor: widget.baseListCupertinoNavbarData.backgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
-                middle: _middleSliver(context),
-                trailing: widget.baseListCupertinoNavbarData.trailing,
-                leading: widget.baseListCupertinoNavbarData.leading,
-                previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                largeTitle: VisibilityDetector(
-                  key: const Key('nav-container'),
-                  onVisibilityChanged: (VisibilityInfo info) {
-                    if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-                      setState(() {
-                        visibility = 1 - info.visibleFraction;
-                      });
-                    } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
-                      setState(() {
-                        visibility = 1;
-                      });
-                    } else {
-                      setState(() {
-                        visibility = 1 - info.visibleFraction;
-                      });
-                    }
-                  },
-                  child: widget.baseListCupertinoNavbarData.largeTitle,
-                ),
-                border: widget.baseListCupertinoNavbarData.buildBorder?.call(visibility) ?? _borderNavSliver(context),
+              ValueListenableBuilder<double>(
+                valueListenable: visibilityNotifier,
+                builder: (context, visibility, child) {
+                  return CupertinoSliverNavigationBar(
+                    stretch: false,
+                    backgroundColor: widget.baseListCupertinoNavbarData.backgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
+                    middle: _middleSliver(context),
+                    trailing: widget.baseListCupertinoNavbarData.trailing,
+                    leading: widget.baseListCupertinoNavbarData.leading,
+                    previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                    largeTitle: VisibilityDetector(
+                      key: const Key('nav-container'),
+                      onVisibilityChanged: (VisibilityInfo info) {
+                        if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+                          visibilityNotifier.value = 1 - info.visibleFraction;
+                        } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
+                          visibilityNotifier.value = 1;
+                        } else {
+                          visibilityNotifier.value = 1 - info.visibleFraction;
+                        }
+                      },
+                      child: widget.baseListCupertinoNavbarData.largeTitle,
+                    ),
+                    border: widget.baseListCupertinoNavbarData.buildBorder?.call(visibility) ?? _borderNavSliver(context,visibility),
+                  );
+                },
               ),
+
               CupertinoSliverRefreshControl(
                 key: _refreshIndicatorKey,
                 onRefresh: _onRefresh,

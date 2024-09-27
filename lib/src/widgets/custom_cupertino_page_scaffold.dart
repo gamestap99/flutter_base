@@ -35,9 +35,8 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
 }
 
 class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffold> {
-  bool showSmallTitle = false;
-  double visibility = 0.0;
   late final ScrollController _scrollController;
+  final ValueNotifier<double> visibilityNotifier = ValueNotifier<double>(0.0);
 
   @override
   void initState() {
@@ -49,6 +48,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
   @override
   void dispose() {
     _scrollController.dispose();
+    visibilityNotifier.dispose();
     super.dispose();
   }
 
@@ -66,7 +66,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     return widget.leading ?? (widget.automaticallyImplyLeading ? barBackButton : null);
   }
 
-  Border? _borderNavSliver(BuildContext context) {
+  Border? _borderNavSliver(BuildContext context, double visibility) {
     Color kBorderColor = const Color(0x4D000000);
 
     return Border(
@@ -86,32 +86,31 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
           parent: AlwaysScrollableScrollPhysics(),
         ),
         slivers: [
-          CupertinoSliverNavigationBar(
-            backgroundColor: widget.navBackgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
-            middle: _middleSliver(context),
-            trailing: widget.trailing,
-            leading: _leading(context),
-            previousPageTitle: widget.previousPageTitle,
-            largeTitle: VisibilityDetector(
-              key: const Key('nav-container'),
-              onVisibilityChanged: (VisibilityInfo info) {
-                if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-                  setState(() {
-                    visibility = 1 - info.visibleFraction;
-                  });
-                } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
-                  setState(() {
-                    visibility = 1;
-                  });
-                } else {
-                  setState(() {
-                    visibility = 1 - info.visibleFraction;
-                  });
-                }
-              },
-              child: widget.largeTitle,
-            ),
-            border: widget.buildBorder?.call(visibility) ?? _borderNavSliver(context),
+          ValueListenableBuilder<double>(
+            valueListenable: visibilityNotifier,
+            builder: (context, visibility, child) {
+              return CupertinoSliverNavigationBar(
+                backgroundColor: widget.navBackgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
+                middle: _middleSliver(context),
+                trailing: widget.trailing,
+                leading: _leading(context),
+                previousPageTitle: widget.previousPageTitle,
+                largeTitle: VisibilityDetector(
+                  key: const Key('nav-container'),
+                  onVisibilityChanged: (VisibilityInfo info) {
+                    if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+                      visibilityNotifier.value = 1 - info.visibleFraction;
+                    } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
+                      visibilityNotifier.value = 1;
+                    } else {
+                      visibilityNotifier.value = 1 - info.visibleFraction;
+                    }
+                  },
+                  child: widget.largeTitle,
+                ),
+                border: widget.buildBorder?.call(visibility) ?? _borderNavSliver(context, visibility),
+              );
+            },
           ),
           ...widget.slivers,
         ],
