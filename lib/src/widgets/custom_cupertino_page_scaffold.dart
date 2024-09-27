@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class CupertinoSliverPageScaffold extends StatefulWidget {
@@ -10,9 +10,10 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
   final void Function()? leadingOnPressed;
   final Widget? trailing;
   final bool automaticallyImplyLeading;
-  final bool isAnimatedColor;
   final Widget largeTitle;
   final Widget? middle;
+  final Border? Function(double visibility)? buildBorder;
+  final Color? Function(double visibility)? navBackgroundColor;
 
   const CupertinoSliverPageScaffold({
     super.key,
@@ -23,8 +24,9 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
     this.leadingOnPressed,
     this.trailing,
     this.middle,
+    this.buildBorder,
+    this.navBackgroundColor,
     this.automaticallyImplyLeading = true,
-    this.isAnimatedColor = true,
     required this.largeTitle,
   });
 
@@ -35,11 +37,19 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
 class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffold> {
   bool showSmallTitle = false;
   double visibility = 0.0;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController();
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Widget? _middleSliver(BuildContext context) {
@@ -59,15 +69,6 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
   Border? _borderNavSliver(BuildContext context) {
     Color kBorderColor = const Color(0x4D000000);
 
-    if (!widget.isAnimatedColor) {
-      return Border(
-        bottom: BorderSide(
-          color: kBorderColor,
-          width: 0.0, // 0.0 means one physical pixel
-        ),
-      );
-    }
-
     return Border(
       bottom: BorderSide(
         width: 0.0,
@@ -78,43 +79,42 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: CupertinoPageScaffold(
-        child: CustomScrollView(
-          slivers: [
-            CupertinoSliverNavigationBar(
-              backgroundColor: !widget.isAnimatedColor ? null : CupertinoColors.white.withOpacity(visibility),
-              middle: _middleSliver(context),
-              trailing: widget.trailing,
-              leading: _leading(context),
-              previousPageTitle: widget.previousPageTitle,
-              largeTitle: VisibilityDetector(
-                key: const Key('nav-container'),
-                onVisibilityChanged: (VisibilityInfo info) {
-                  if(info.visibleFraction < 1){
-                    setState(() {
-                      visibility = 1 - info.visibleFraction;
-                    });
-                  }
-
-                  if (info.visibleFraction > 0) {
-                    setState(() {
-                      showSmallTitle = false;
-                    });
-                  } else {
-                    setState(() {
-                      showSmallTitle = true;
-                    });
-                  }
-                },
-                child: widget.largeTitle,
-              ),
-              border: _borderNavSliver(context),
-            ),
-            ...widget.slivers,
-          ],
+    return CupertinoPageScaffold(
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
         ),
+        slivers: [
+          CupertinoSliverNavigationBar(
+            backgroundColor: widget.navBackgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
+            middle: _middleSliver(context),
+            trailing: widget.trailing,
+            leading: _leading(context),
+            previousPageTitle: widget.previousPageTitle,
+            largeTitle: VisibilityDetector(
+              key: const Key('nav-container'),
+              onVisibilityChanged: (VisibilityInfo info) {
+                if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+                  setState(() {
+                    visibility = 1 - info.visibleFraction;
+                  });
+                } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
+                  setState(() {
+                    visibility = 1;
+                  });
+                } else {
+                  setState(() {
+                    visibility = 1 - info.visibleFraction;
+                  });
+                }
+              },
+              child: widget.largeTitle,
+            ),
+            border: widget.buildBorder?.call(visibility) ?? _borderNavSliver(context),
+          ),
+          ...widget.slivers,
+        ],
       ),
     );
   }
