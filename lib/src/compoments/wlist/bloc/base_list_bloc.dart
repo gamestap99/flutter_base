@@ -130,6 +130,8 @@ class BaseListBloc<T, F> extends BlocBaseMain<BaseListEvent, BaseListState<T>> {
       return;
     }
 
+    if (state.status == EBlocStateStatus.loadingMore) return;
+
     if (!state.isNextPageAvailable) {
       return;
     }
