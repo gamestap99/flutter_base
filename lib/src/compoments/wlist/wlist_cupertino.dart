@@ -11,10 +11,10 @@ class BaseListCupertinoNavbarData {
   final Widget? leading;
   final Widget? trailing;
   final String? previousPageTitle;
-  final Color? leadingColor;
-  final void Function()? leadingOnPressed;
-  final Border? Function(double visibility)? buildBorder;
-  final Color? Function(double visibility)? backgroundColor;
+  final Border? border;
+  final Color?  backgroundColor;
+  final bool isTransparent;
+  final bool isSliverAppBar;
 
   BaseListCupertinoNavbarData({
     required this.largeTitle,
@@ -22,10 +22,10 @@ class BaseListCupertinoNavbarData {
     this.leading,
     this.trailing,
     this.previousPageTitle,
-    this.leadingColor,
-    this.leadingOnPressed,
-    this.buildBorder,
+    this.border,
     this.backgroundColor,
+    this.isTransparent = false,
+    this.isSliverAppBar = true,
   });
 }
 
@@ -189,6 +189,20 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
 
   @override
   Widget build(BuildContext context) {
+    Color? navBarBackgroundColor = widget.baseListCupertinoNavbarData.isTransparent ? Colors.transparent : widget.baseListCupertinoNavbarData.backgroundColor;
+    Brightness? navBarBrightness = widget.baseListCupertinoNavbarData.isTransparent ? Brightness.light : null;
+    Border? navBorder = widget.baseListCupertinoNavbarData.isTransparent ? const Border() : widget.baseListCupertinoNavbarData.border;
+
+    CupertinoNavigationBar? navigationBar = !widget.baseListCupertinoNavbarData.isSliverAppBar ? CupertinoNavigationBar(
+      brightness: navBarBrightness,
+      backgroundColor: navBarBackgroundColor,
+      middle: _middleSliver(context),
+      trailing: widget.baseListCupertinoNavbarData.trailing,
+      leading: widget.baseListCupertinoNavbarData.leading,
+      previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+      border: navBorder,
+    ) : null;
+
     return BlocConsumer<BaseListBloc<T, F>, BaseListState<T>>(
       listenWhen: (pev, cur) => pev.status != cur.status || (pev.items != cur.items),
       listener: (context, state) {
@@ -197,84 +211,75 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
       buildWhen: (pev, cur) => pev.status != cur.status,
       builder: (context, state) {
         return CupertinoPageScaffold(
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            slivers: [
-              ValueListenableBuilder<double>(
-                valueListenable: visibilityNotifier,
-                builder: (context, visibility, child) {
-                  return CupertinoSliverNavigationBar(
-                    stretch: false,
-                    backgroundColor: widget.baseListCupertinoNavbarData.backgroundColor?.call(visibility) ?? CupertinoColors.white.withOpacity(visibility),
-                    middle: _middleSliver(context),
-                    trailing: widget.baseListCupertinoNavbarData.trailing,
-                    leading: widget.baseListCupertinoNavbarData.leading,
-                    previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                    largeTitle: VisibilityDetector(
-                      key: const Key('nav-container'),
-                      onVisibilityChanged: (VisibilityInfo info) {
-                        if (info.visibleFraction < 1 && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-                          visibilityNotifier.value = 1 - info.visibleFraction;
-                        } else if (info.visibleFraction >= 1 && _scrollController.position.pixels > 20) {
-                          visibilityNotifier.value = 1;
-                        } else {
-                          visibilityNotifier.value = 1 - info.visibleFraction;
-                        }
-                      },
-                      child: widget.baseListCupertinoNavbarData.largeTitle,
-                    ),
-                    border: widget.baseListCupertinoNavbarData.buildBorder?.call(visibility) ?? _borderNavSliver(context,visibility),
-                  );
-                },
+          navigationBar: navigationBar,
+          child: SafeArea(
+            top: !widget.baseListCupertinoNavbarData.isSliverAppBar,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
               ),
-
-              CupertinoSliverRefreshControl(
-                key: _refreshIndicatorKey,
-                onRefresh: _onRefresh,
-              ),
-              if (widget.buildTop != null)
-                SliverToBoxAdapter(
-                  child: widget.buildTop?.call(state),
+              slivers: [
+                if(widget.baseListCupertinoNavbarData.isSliverAppBar)ValueListenableBuilder<double>(
+                  valueListenable: visibilityNotifier,
+                  builder: (context, visibility, child) {
+                    return CupertinoSliverNavigationBar(
+                      brightness: navBarBrightness,
+                      backgroundColor: navBarBackgroundColor,
+                      middle: _middleSliver(context),
+                      trailing: widget.baseListCupertinoNavbarData.trailing,
+                      leading: widget.baseListCupertinoNavbarData.leading,
+                      previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                      largeTitle: widget.baseListCupertinoNavbarData.largeTitle,
+                      border: navBorder,
+                    );
+                  },
                 ),
-              Builder(builder: (context) {
-                switch (state.status) {
-                  case EBlocStateStatus.idle:
-                  case EBlocStateStatus.loading:
-                    {
-                      if (widget.customBuildLoading != null) {
-                        return widget.customBuildLoading!.call();
-                      } else if (widget.buildLoading == null) {
-                        return const SliverFillRemaining(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      } else {
-                        return _buildLoading(state);
+                CupertinoSliverRefreshControl(
+                  key: _refreshIndicatorKey,
+                  onRefresh: _onRefresh,
+                ),
+                if (widget.buildTop != null)
+                  SliverToBoxAdapter(
+                    child: widget.buildTop?.call(state),
+                  ),
+                Builder(builder: (context) {
+                  switch (state.status) {
+                    case EBlocStateStatus.idle:
+                    case EBlocStateStatus.loading:
+                      {
+                        if (widget.customBuildLoading != null) {
+                          return widget.customBuildLoading!.call();
+                        } else if (widget.buildLoading == null) {
+                          return const SliverFillRemaining(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else {
+                          return _buildLoading(state);
+                        }
                       }
-                    }
 
-                  case EBlocStateStatus.fail:
-                    return _buildFailure();
+                    case EBlocStateStatus.fail:
+                      return _buildFailure();
 
-                  case EBlocStateStatus.success:
-                  case EBlocStateStatus.loadingMore:
-                  case EBlocStateStatus.loadMoreFailure:
-                  case EBlocStateStatus.loadMoreSuccess:
-                  case EBlocStateStatus.loadingRefresh:
-                  case EBlocStateStatus.loadRefreshFailure:
-                  case EBlocStateStatus.loadRefreshSuccess:
-                    return _buildLoaded();
+                    case EBlocStateStatus.success:
+                    case EBlocStateStatus.loadingMore:
+                    case EBlocStateStatus.loadMoreFailure:
+                    case EBlocStateStatus.loadMoreSuccess:
+                    case EBlocStateStatus.loadingRefresh:
+                    case EBlocStateStatus.loadRefreshFailure:
+                    case EBlocStateStatus.loadRefreshSuccess:
+                      return _buildLoaded();
 
-                  default:
-                    return const SizedBox.shrink();
-                }
-              }),
-              if (state.items.isNotEmpty) _buildLoadMore(),
-            ],
+                    default:
+                      return const SizedBox.shrink();
+                  }
+                }),
+                if (state.items.isNotEmpty) _buildLoadMore(),
+              ],
+            ),
           ),
         );
       },

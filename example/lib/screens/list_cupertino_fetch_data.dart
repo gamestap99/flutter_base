@@ -37,9 +37,9 @@ class _RenderState extends State<_Render> {
       body: BaseListCupertinoWidget<ProjectEntity, dynamic>(
         queryParameters: {},
         baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
-          leadingColor: CupertinoColors.black,
+          isTransparent: true,
+          isSliverAppBar: false,
           previousPageTitle: "Home",
-          leadingOnPressed: () => Navigator.pop(context),
           largeTitle: const Text('Test'),
           middle: const Text("aa"),
           trailing: IconButton(
@@ -49,7 +49,7 @@ class _RenderState extends State<_Render> {
             icon: const Icon(CupertinoIcons.line_horizontal_3_decrease),
           ),
         ),
-        opts: const BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24)),
+        opts: const BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24,vertical: 20)),
         buildItem: (item, int index) {
           return Card(
             child: Column(

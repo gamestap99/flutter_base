@@ -16,8 +16,10 @@ class _CustomCupertinoPageScaffoldScreenState extends State<CustomCupertinoPageS
   Widget build(BuildContext context) {
 
     return const CupertinoSliverPageScaffold(
+      isTransparent: true,
+      isSliverAppBar: false,
       largeTitle: Text('Dịch vụ'),
-      // middle: Text("aa"),
+      middle: Text("aa"),
       automaticallyImplyLeading: false,
       slivers: [
         SliverToBoxAdapter(
