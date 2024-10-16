@@ -41,6 +41,7 @@ dependencies:
   syncfusion_localizations: ^26.2.14
   flutter_localizations:
     sdk: flutter
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
