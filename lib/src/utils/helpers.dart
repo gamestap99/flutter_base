@@ -5,7 +5,7 @@ import 'package:dartx/dartx.dart';
 
 import 'package:intl/intl.dart';
 
-class Helpers {
+class BaseHelpers {
   static String printDuration(Duration duration) {
     String negativeSign = duration.isNegative ? '-' : '';
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -95,11 +95,11 @@ class Helpers {
   }
 
   static void dumpInitState(dynamic runtimeType) {
-    Helpers.dump("--------- initState:$runtimeType ---------");
+    BaseHelpers.dump("--------- initState:$runtimeType ---------");
   }
 
   static void dumpDisposeState(dynamic runtimeType) {
-    Helpers.dump("--------- dispose:$runtimeType ---------");
+    BaseHelpers.dump("--------- dispose:$runtimeType ---------");
   }
 
   static String convertPhone(String phone) {

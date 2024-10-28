@@ -93,7 +93,7 @@ class _WInputBirthdayState extends State<WInputBirthday> {
             lastDate: DateTime(DateTime.now().year + 20),
           ).then((value) {
             if (value != null) {
-              widget.onChanged?.call(Helpers.formatDate(value, format: 'dd/MM/yyyy'));
+              widget.onChanged?.call(BaseHelpers.formatDate(value, format: 'dd/MM/yyyy'));
             }
           });
         },

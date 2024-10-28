@@ -8,8 +8,6 @@ class DemoFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtilHelper.init(context);
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(

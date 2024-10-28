@@ -102,6 +102,24 @@ class Normalize {
   }
 
   static dynamic _key(Map<String, dynamic> json, dynamic key) {
+    if (key is String) {
+      if (key.indexOf('_') == 0) {
+        return key;
+      }
+
+      final key1 = ReCase(key).snakeCase;
+
+      if (json.containsKey(key1)) {
+        return key1;
+      }
+
+      final key2 = ReCase(key).camelCase;
+
+      if (json.containsKey(key2)) {
+        return key2;
+      }
+    }
+
     if (key is List) {
       for (var element in key) {
         if (json.containsKey(element)) {
@@ -141,7 +159,7 @@ class Normalize {
 
       return value;
     } catch (ex, st) {
-      Helpers.dumpErr("object", error: ex, stackStrace: st);
+      BaseHelpers.dumpErr("object", error: ex, stackStrace: st);
       return null;
     }
   }

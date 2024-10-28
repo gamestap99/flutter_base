@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../flutter_base.dart';
 import '../constants/color.dart';
@@ -47,8 +48,8 @@ class CupertinoRangeDateWidget extends StatefulWidget {
 
 class _CupertinoRangeDateWidgetState extends State<CupertinoRangeDateWidget> {
   final controller = DateRangePickerController();
-  DateTime? startDate = null;
-  DateTime? endDate = null;
+  DateTime? startDate;
+  DateTime? endDate;
 
   @override
   void initState() {
