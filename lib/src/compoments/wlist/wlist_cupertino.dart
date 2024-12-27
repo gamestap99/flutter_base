@@ -13,9 +13,10 @@ class BaseListCupertinoNavbarData {
   final Widget? trailing;
   final String? previousPageTitle;
   final Border? border;
-  final Color?  backgroundColor;
+  final Color? backgroundColor;
   final bool isTransparent;
   final bool isSliverAppBar;
+  final bool isHidden;
 
   BaseListCupertinoNavbarData({
     required this.largeTitle,
@@ -27,6 +28,7 @@ class BaseListCupertinoNavbarData {
     this.backgroundColor,
     this.isTransparent = false,
     this.isSliverAppBar = true,
+    this.isHidden = false,
   });
 }
 
@@ -177,7 +179,7 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     return widget.baseListCupertinoNavbarData.middle;
   }
 
-  Border? _borderNavSliver(BuildContext context,double visibility) {
+  Border? _borderNavSliver(BuildContext context, double visibility) {
     Color kBorderColor = const Color(0x4D000000);
 
     return Border(
@@ -194,15 +196,17 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     Brightness? navBarBrightness = widget.baseListCupertinoNavbarData.isTransparent ? Brightness.light : null;
     Border? navBorder = widget.baseListCupertinoNavbarData.isTransparent ? const Border() : widget.baseListCupertinoNavbarData.border;
 
-    CupertinoNavigationBar? navigationBar = !widget.baseListCupertinoNavbarData.isSliverAppBar ? CupertinoNavigationBar(
-      brightness: navBarBrightness,
-      backgroundColor: navBarBackgroundColor,
-      middle: _middleSliver(context),
-      trailing: widget.baseListCupertinoNavbarData.trailing,
-      leading: widget.baseListCupertinoNavbarData.leading,
-      previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-      border: navBorder,
-    ) : null;
+    CupertinoNavigationBar? navigationBar = !widget.baseListCupertinoNavbarData.isSliverAppBar
+        ? CupertinoNavigationBar(
+            brightness: navBarBrightness,
+            backgroundColor: navBarBackgroundColor,
+            middle: _middleSliver(context),
+            trailing: widget.baseListCupertinoNavbarData.trailing,
+            leading: widget.baseListCupertinoNavbarData.leading,
+            previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+            border: navBorder,
+          )
+        : null;
 
     return BlocConsumer<BaseListBloc<T, F>, BaseListState<T>>(
       listenWhen: (pev, cur) => pev.status != cur.status || (pev.items != cur.items),
@@ -212,30 +216,32 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
       buildWhen: (pev, cur) => pev.status != cur.status,
       builder: (context, state) {
         return CupertinoPageScaffold(
-          navigationBar: navigationBar,
+          navigationBar: widget.baseListCupertinoNavbarData.isHidden ? null : navigationBar,
           child: SafeArea(
-            top: !widget.baseListCupertinoNavbarData.isSliverAppBar,
+            top: widget.baseListCupertinoNavbarData.isHidden ? true : !widget.baseListCupertinoNavbarData.isSliverAppBar,
+            bottom: false,
             child: CustomScrollView(
               controller: _scrollController,
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               slivers: [
-                if(widget.baseListCupertinoNavbarData.isSliverAppBar)ValueListenableBuilder<double>(
-                  valueListenable: visibilityNotifier,
-                  builder: (context, visibility, child) {
-                    return CupertinoSliverNavigationBar(
-                      brightness: navBarBrightness,
-                      backgroundColor: navBarBackgroundColor,
-                      middle: _middleSliver(context),
-                      trailing: widget.baseListCupertinoNavbarData.trailing,
-                      leading: widget.baseListCupertinoNavbarData.leading,
-                      previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                      largeTitle: widget.baseListCupertinoNavbarData.largeTitle,
-                      border: navBorder,
-                    );
-                  },
-                ),
+                if (widget.baseListCupertinoNavbarData.isSliverAppBar && !widget.baseListCupertinoNavbarData.isHidden)
+                  ValueListenableBuilder<double>(
+                    valueListenable: visibilityNotifier,
+                    builder: (context, visibility, child) {
+                      return CupertinoSliverNavigationBar(
+                        brightness: navBarBrightness,
+                        backgroundColor: navBarBackgroundColor,
+                        middle: _middleSliver(context),
+                        trailing: widget.baseListCupertinoNavbarData.trailing,
+                        leading: widget.baseListCupertinoNavbarData.leading,
+                        previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
+                        largeTitle: widget.baseListCupertinoNavbarData.largeTitle,
+                        border: navBorder,
+                      );
+                    },
+                  ),
                 CupertinoSliverRefreshControl(
                   key: _refreshIndicatorKey,
                   onRefresh: _onRefresh,
