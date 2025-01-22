@@ -18,6 +18,8 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
   final bool isSliverAppBar;
   final Border? border;
   final Color? backgroundColor;
+  final Color? scaffoldBgColor;
+  final bool scaffoldResizeToAvoidBottomInset;
 
   const CupertinoSliverPageScaffold({
     super.key,
@@ -35,8 +37,10 @@ class CupertinoSliverPageScaffold extends StatefulWidget {
     this.isSliverAppBar = true,
     this.border,
     this.backgroundColor,
+    this.scaffoldBgColor,
     this.largeTitle,
-  }): assert((isSliverAppBar && largeTitle != null) || isSliverAppBar == false);
+    this.scaffoldResizeToAvoidBottomInset = true,
+  }) : assert((isSliverAppBar && largeTitle != null) || isSliverAppBar == false);
 
   @override
   State<CupertinoSliverPageScaffold> createState() => _CupertinoSliverPageScaffoldState();
@@ -104,6 +108,8 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
         : null;
 
     return CupertinoPageScaffold(
+      resizeToAvoidBottomInset: widget.scaffoldResizeToAvoidBottomInset,
+      backgroundColor: widget.scaffoldBgColor,
       navigationBar: navigationBar,
       child: SafeArea(
         top: !widget.isSliverAppBar,

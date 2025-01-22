@@ -112,10 +112,6 @@ class BaseHelpers {
     return phone;
   }
 
-  // static String getBaseName(String path) {
-  //   return basename(path);
-  // }
-
   static void hideKeyboard(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
