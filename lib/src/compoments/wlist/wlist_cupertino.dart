@@ -6,32 +6,6 @@ import 'package:flutter_base/flutter_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class BaseListCupertinoNavbarData {
-  final Widget largeTitle;
-  final Widget? middle;
-  final Widget? leading;
-  final Widget? trailing;
-  final String? previousPageTitle;
-  final Border? border;
-  final Color? backgroundColor;
-  final bool isTransparent;
-  final bool isSliverAppBar;
-  final bool isHidden;
-
-  BaseListCupertinoNavbarData({
-    required this.largeTitle,
-    this.middle,
-    this.leading,
-    this.trailing,
-    this.previousPageTitle,
-    this.border,
-    this.backgroundColor,
-    this.isTransparent = false,
-    this.isSliverAppBar = true,
-    this.isHidden = false,
-  });
-}
-
 class BaseListCupertinoWidget<T, F> extends StatefulWidget {
   final List<T>? items;
   final BaseListOpts opts;
@@ -49,7 +23,8 @@ class BaseListCupertinoWidget<T, F> extends StatefulWidget {
   final String? emptyText;
   final bool Function(T)? filter;
   final ScrollController? scrollController;
-  final BaseListCupertinoNavbarData baseListCupertinoNavbarData;
+  final CupertinoSliverNavigationBar? cupertinoSliverNavigationBar;
+  final CupertinoNavigationBar? cupertinoNavigationBar;
 
   /// Automatic call Api with new queryParameters. Default: false
   final bool autoFilter;
@@ -65,7 +40,6 @@ class BaseListCupertinoWidget<T, F> extends StatefulWidget {
     this.customList,
     this.emptyText,
     required this.queryParameters,
-    required this.baseListCupertinoNavbarData,
     this.buildTop,
     this.initRefreshKey,
     required this.buildItem,
@@ -74,6 +48,8 @@ class BaseListCupertinoWidget<T, F> extends StatefulWidget {
     this.autoFilter = false,
     this.filter,
     this.scrollController,
+    this.cupertinoSliverNavigationBar,
+    this.cupertinoNavigationBar,
   });
 
   @override
@@ -175,39 +151,9 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
     }
   }
 
-  Widget? _middleSliver(BuildContext context) {
-    return widget.baseListCupertinoNavbarData.middle;
-  }
-
-  Border? _borderNavSliver(BuildContext context, double visibility) {
-    Color kBorderColor = const Color(0x4D000000);
-
-    return Border(
-      bottom: BorderSide(
-        width: 0.0,
-        color: kBorderColor.withOpacity(visibility),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    Color? navBarBackgroundColor = widget.baseListCupertinoNavbarData.isTransparent ? Colors.transparent : widget.baseListCupertinoNavbarData.backgroundColor;
-    Brightness? navBarBrightness = widget.baseListCupertinoNavbarData.isTransparent ? Brightness.light : null;
-    Border? navBorder = widget.baseListCupertinoNavbarData.isTransparent ? const Border() : widget.baseListCupertinoNavbarData.border;
-
-    CupertinoNavigationBar? navigationBar = !widget.baseListCupertinoNavbarData.isSliverAppBar
-        ? CupertinoNavigationBar(
-            brightness: navBarBrightness,
-            backgroundColor: navBarBackgroundColor,
-            middle: _middleSliver(context),
-            trailing: widget.baseListCupertinoNavbarData.trailing,
-            leading: widget.baseListCupertinoNavbarData.leading,
-            previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-            border: navBorder,
-          )
-        : null;
-
     return BlocConsumer<BaseListBloc<T, F>, BaseListState<T>>(
       listenWhen: (pev, cur) => pev.status != cur.status || (pev.items != cur.items),
       listener: (context, state) {
@@ -216,77 +162,58 @@ class _BaseListCupertinoWidgetState<T, F> extends State<BaseListCupertinoWidget<
       buildWhen: (pev, cur) => pev.status != cur.status,
       builder: (context, state) {
         return CupertinoPageScaffold(
-          navigationBar: widget.baseListCupertinoNavbarData.isHidden ? null : navigationBar,
-          child: SafeArea(
-            top: widget.baseListCupertinoNavbarData.isHidden ? true : !widget.baseListCupertinoNavbarData.isSliverAppBar,
-            bottom: false,
-            child: CustomScrollView(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              slivers: [
-                if (widget.baseListCupertinoNavbarData.isSliverAppBar && !widget.baseListCupertinoNavbarData.isHidden)
-                  ValueListenableBuilder<double>(
-                    valueListenable: visibilityNotifier,
-                    builder: (context, visibility, child) {
-                      return CupertinoSliverNavigationBar(
-                        brightness: navBarBrightness,
-                        backgroundColor: navBarBackgroundColor,
-                        middle: _middleSliver(context),
-                        trailing: widget.baseListCupertinoNavbarData.trailing,
-                        leading: widget.baseListCupertinoNavbarData.leading,
-                        previousPageTitle: widget.baseListCupertinoNavbarData.previousPageTitle,
-                        largeTitle: widget.baseListCupertinoNavbarData.largeTitle,
-                        border: navBorder,
-                      );
-                    },
-                  ),
-                CupertinoSliverRefreshControl(
-                  key: _refreshIndicatorKey,
-                  onRefresh: _onRefresh,
-                ),
-                if (widget.buildTop != null)
-                  SliverToBoxAdapter(
-                    child: widget.buildTop?.call(state),
-                  ),
-                Builder(builder: (context) {
-                  switch (state.status) {
-                    case EBlocStateStatus.idle:
-                    case EBlocStateStatus.loading:
-                      {
-                        if (widget.customBuildLoading != null) {
-                          return widget.customBuildLoading!.call();
-                        } else if (widget.buildLoading == null) {
-                          return const SliverFillRemaining(
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        } else {
-                          return _buildLoading(state);
-                        }
-                      }
-
-                    case EBlocStateStatus.fail:
-                      return _buildFailure();
-
-                    case EBlocStateStatus.success:
-                    case EBlocStateStatus.loadingMore:
-                    case EBlocStateStatus.loadMoreFailure:
-                    case EBlocStateStatus.loadMoreSuccess:
-                    case EBlocStateStatus.loadingRefresh:
-                    case EBlocStateStatus.loadRefreshFailure:
-                    case EBlocStateStatus.loadRefreshSuccess:
-                      return _buildLoaded();
-
-                    default:
-                      return const SizedBox.shrink();
-                  }
-                }),
-                if (state.items.isNotEmpty) _buildLoadMore(),
-              ],
+          navigationBar: widget.cupertinoNavigationBar,
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
+            slivers: [
+              if (widget.cupertinoSliverNavigationBar != null) widget.cupertinoSliverNavigationBar!,
+              CupertinoSliverRefreshControl(
+                key: _refreshIndicatorKey,
+                onRefresh: _onRefresh,
+              ),
+              if (widget.buildTop != null)
+                SliverToBoxAdapter(
+                  child: widget.buildTop?.call(state),
+                ),
+              Builder(builder: (context) {
+                switch (state.status) {
+                  case EBlocStateStatus.idle:
+                  case EBlocStateStatus.loading:
+                    {
+                      if (widget.customBuildLoading != null) {
+                        return widget.customBuildLoading!.call();
+                      } else if (widget.buildLoading == null) {
+                        return const SliverFillRemaining(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else {
+                        return _buildLoading(state);
+                      }
+                    }
+
+                  case EBlocStateStatus.fail:
+                    return _buildFailure();
+
+                  case EBlocStateStatus.success:
+                  case EBlocStateStatus.loadingMore:
+                  case EBlocStateStatus.loadMoreFailure:
+                  case EBlocStateStatus.loadMoreSuccess:
+                  case EBlocStateStatus.loadingRefresh:
+                  case EBlocStateStatus.loadRefreshFailure:
+                  case EBlocStateStatus.loadRefreshSuccess:
+                    return _buildLoaded();
+
+                  default:
+                    return const SizedBox.shrink();
+                }
+              }),
+              if (state.items.isNotEmpty) _buildLoadMore(),
+            ],
           ),
         );
       },
