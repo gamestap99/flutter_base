@@ -30,25 +30,52 @@ class _Render extends StatefulWidget {
 class _RenderState extends State<_Render> {
   bool _isAnimatedNavBg = true;
   bool _isLargeTitle = true;
+  bool searchIsActive = false;
+  late String text;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BaseListCupertinoWidget<ProjectEntity, dynamic>(
         queryParameters: {},
-        baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
-          isTransparent: true,
-          isSliverAppBar: false,
-          previousPageTitle: "Home",
-          largeTitle: const Text('Test'),
-          middle: const Text("aa"),
-          trailing: IconButton(
-            onPressed: () {
-              // _showSheet(context);
+        cupertinoSliverNavigationBar: CupertinoSliverNavigationBar.search(
+          stretch: true,
+          // middle: const Text('Contacts Group'),
+          largeTitle: const Text('Family'),
+          // bottomMode: true,
+          searchField: CupertinoSearchTextField(
+            autofocus: true,
+            placeholder: searchIsActive ? 'Enter search text' : 'Search',
+            onChanged: (String value) {
+              setState(() {
+                if (value.isEmpty) {
+                  text = 'Type in the search field to show text here';
+                } else {
+                  text = 'The text has changed to: $value';
+                }
+              });
             },
-            icon: const Icon(CupertinoIcons.line_horizontal_3_decrease),
           ),
+          onSearchableBottomTap: (bool value) {
+            text = 'Type in the search field to show text here';
+            setState(() {
+              searchIsActive = value;
+            });
+          },
         ),
+        // baseListCupertinoNavbarData: BaseListCupertinoNavbarData(
+        //   isTransparent: true,
+        //   isSliverAppBar: false,
+        //   previousPageTitle: "Home",
+        //   largeTitle: const Text('Test'),
+        //   middle: const Text("aa"),
+        //   trailing: IconButton(
+        //     onPressed: () {
+        //       // _showSheet(context);
+        //     },
+        //     icon: const Icon(CupertinoIcons.line_horizontal_3_decrease),
+        //   ),
+        // ),
         opts: const BaseListOpts(padding: EdgeInsetsDirectional.symmetric(horizontal: 24,vertical: 20)),
         buildItem: (item, int index) {
           return Card(
