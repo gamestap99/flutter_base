@@ -8,3 +8,8 @@ export 'witem/index.dart';
 export 'wlist/index.dart';
 export 'custom_sliver_grid_dynamic.dart';
 export 'error_widget.dart';
+
+// Pro VIP components
+export 'wlist_pro/index.dart';
+export 'witem_pro/index.dart';
+export 'wform_pro/index.dart';

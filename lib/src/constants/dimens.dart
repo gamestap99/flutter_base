@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CFontSize {
   CFontSize._();
 
-  static double paragraph1 = 14.sp;
-  static double paragraph2 = 13.sp;
-  static double paragraph3 = 12.sp;
-  static double paragraph4 = 10.sp;
-  static double paragraph5 = 8.0.sp;
-  static double headline1 = 32.0.sp;
-  static double headline2 = 24.0.sp;
-  static double headline3 = 20.sp;
-  static double headline4 = 16.0.sp;
+  static double paragraph1 = 14;
+  static double paragraph2 = 13;
+  static double paragraph3 = 12;
+  static double paragraph4 = 10;
+  static double paragraph5 = 8.0;
+  static double headline1 = 32.0;
+  static double headline2 = 24.0;
+  static double headline3 = 20;
+  static double headline4 = 16.0;
 }
 
 class CSpace {

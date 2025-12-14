@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class AppConsole {
-  static void dump(dynamic object, {bool line = true, String name = ""}) {
+  static void log(dynamic object, {bool line = true, String name = ""}) {
     if (!kReleaseMode) {
       if (object is List) {
         for (var element in object) {
@@ -46,10 +46,10 @@ class AppConsole {
   }
 
   static void dumpInitState(dynamic runtimeType) {
-    AppConsole.dump("--------- initState:$runtimeType ---------");
+    AppConsole.log("--------- initState:$runtimeType ---------");
   }
 
   static void dumpDisposeState(dynamic runtimeType) {
-    AppConsole.dump("--------- dispose:$runtimeType ---------");
+    AppConsole.log("--------- dispose:$runtimeType ---------");
   }
 }
