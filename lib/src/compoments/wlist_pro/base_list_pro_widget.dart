@@ -84,6 +84,16 @@ class BaseListProWidget<T, F> extends StatefulWidget {
   /// Scroll direction listener
   final void Function(bool isForward)? onListenerScroll;
 
+  /// Header builder for custom scroll containers (e.g. NestedScrollView)
+  /// Receives list of slivers and returns custom widget
+  /// When provided, replaces the default CustomScrollView implementation
+  final Widget Function({
+    required List<Widget> slivers,
+    required ScrollController scrollController,
+    required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+    required Future<void> Function() onRefresh,
+  })? headerBuilder;
+
   const BaseListProWidget({
     super.key,
     required this.buildItem,
@@ -110,6 +120,7 @@ class BaseListProWidget<T, F> extends StatefulWidget {
     this.initRefreshKey,
     this.onInitScrollController,
     this.onListenerScroll,
+    this.headerBuilder,
   });
 
   @override
@@ -183,6 +194,32 @@ class _BaseListProWidgetState<T, F> extends State<BaseListProWidget<T, F>> {
   Widget build(BuildContext context) {
     return BlocBuilder<BaseListProBloc<T, F>, BaseListProState<T>>(
       builder: (context, state) {
+        final slivers = <Widget>[
+          // App bar
+          if (widget.sliverAppBar != null) widget.sliverAppBar!(state),
+
+          // Top content
+          if (widget.buildTop != null)
+            SliverToBoxAdapter(child: widget.buildTop!(state)),
+
+          // Main content based on state
+          _buildContent(state),
+
+          // Load more indicator
+          if (state.isLoaded && state.hasMore) _buildLoadMore(state),
+        ];
+
+        // Use custom headerBuilder if provided (for NestedScrollView etc.)
+        if (widget.headerBuilder != null) {
+          return widget.headerBuilder!(
+            slivers: slivers,
+            scrollController: _scrollController,
+            refreshIndicatorKey: _refreshIndicatorKey,
+            onRefresh: _onRefresh,
+          );
+        }
+
+        // Default implementation with RefreshIndicator + CustomScrollView
         return RefreshIndicator(
           key: _refreshIndicatorKey,
           onRefresh: _onRefresh,
@@ -191,20 +228,7 @@ class _BaseListProWidgetState<T, F> extends State<BaseListProWidget<T, F>> {
             child: CustomScrollView(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                // App bar
-                if (widget.sliverAppBar != null) widget.sliverAppBar!(state),
-
-                // Top content
-                if (widget.buildTop != null)
-                  SliverToBoxAdapter(child: widget.buildTop!(state)),
-
-                // Main content based on state
-                _buildContent(state),
-
-                // Load more indicator
-                if (state.isLoaded && state.hasMore) _buildLoadMore(state),
-              ],
+              slivers: slivers,
             ),
           ),
         );

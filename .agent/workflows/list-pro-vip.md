@@ -226,7 +226,80 @@ class _ItemCard extends StatelessWidget {
     );
   }
 }
+
+## Step 4: Sử dụng với NestedScrollView (headerBuilder)
+
+Khi cần custom scroll container (ví dụ: `NestedScrollView` với `SliverAppBar` phức tạp), sử dụng `headerBuilder`:
+
+```dart
+class _[Name]ListContent extends StatelessWidget {
+  const _[Name]ListContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BaseListProWidget<[Entity], [FilterType]>(
+        buildItem: (item, index) => _ItemCard(item: item),
+        
+        // Custom headerBuilder cho NestedScrollView
+        headerBuilder: ({
+          required slivers,
+          required scrollController,
+          required refreshIndicatorKey,
+          required onRefresh,
+        }) {
+          return NestedScrollView(
+            controller: scrollController,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverAppBar(
+                title: const Text('[List Title]'),
+                pinned: true,
+                floating: true,
+                forceElevated: innerBoxIsScrolled,
+                expandedHeight: 200,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Image.network(
+                    'https://example.com/header.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () => context.read<BaseListProBloc<[Entity], [FilterType]>>().refresh(),
+                  ),
+                ],
+              ),
+              // Thêm các sliver header khác nếu cần
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text('Header Content'),
+                ),
+              ),
+            ],
+            body: RefreshIndicator(
+              key: refreshIndicatorKey,
+              onRefresh: onRefresh,
+              child: CustomScrollView(
+                slivers: slivers,
+              ),
+            ),
+          );
+        },
+        
+        padding: const EdgeInsets.all(16),
+      ),
+    );
+  }
+}
 ```
+
+**Tham số headerBuilder nhận vào:**
+- `slivers`: List các sliver widgets (buildTop, content, loadMore indicator)
+- `scrollController`: ScrollController để quản lý scroll
+- `refreshIndicatorKey`: Key cho RefreshIndicator  
+- `onRefresh`: Function gọi khi pull-to-refresh
 
 ## API Methods của BaseListProBloc
 
