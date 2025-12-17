@@ -183,21 +183,21 @@ abstract class GetItemUseCase<T, F> extends ResultUseCase<T, F> {
 /// Base class for list parameters - use this for custom param classes
 /// Example:
 /// ```dart
-/// class PostGetListParam extends BaseListParam {
+/// class PostGetListParam extends ProBaseListParam {
 ///   final Map<String, String>? customFilter;
 ///   PostGetListParam({required super.page, required super.limit, this.customFilter});
 ///   @override
 ///   Map<String, dynamic> mergeParam() => {...super.mergeParam(), ...?customFilter};
 /// }
 /// ```
-abstract class BaseListParam {
+abstract class ProBaseListParam {
   final int page;
   final int limit;
   final String? sort;
   final String? order;
   final Map<String, dynamic>? filter;
 
-  BaseListParam({
+  ProBaseListParam({
     required this.page,
     required this.limit,
     this.filter,
@@ -272,10 +272,10 @@ class UseCaseAdapter {
     };
   }
 
-  /// Simplified wrapper when UseCase uses BaseListParam-compatible params
+  /// Simplified wrapper when UseCase uses ProBaseListParam-compatible params
   /// and returns ItemsResEntity-like response with .items and .meta
   static Future<Result<ListResponse<T>>> Function(int page, int limit, P? filter)
-      wrapSimple<T, P extends BaseListParam>({
+      wrapSimple<T, P extends ProBaseListParam>({
     required Future<dynamic> Function(P param) executor,
     required P Function(int page, int limit, P? existing) paramBuilder,
     required List<T> Function(dynamic response) itemsExtractor,
