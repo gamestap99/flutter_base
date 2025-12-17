@@ -13,3 +13,5 @@ export 'result/result.dart';
 export 'retry/retry_config.dart';
 export 'cache/lru_cache.dart';
 export 'repository/repository.dart';
+export 'domain/use_case.dart';
+

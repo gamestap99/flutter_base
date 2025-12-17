@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/bloc/bloc_pro_observer.dart';
 import '../../../core/cache/lru_cache.dart';
+import '../../../core/domain/use_case.dart';
 import '../../../core/failure/failure.dart';
 import '../../../core/repository/repository.dart';
 import '../../../core/result/result.dart';
@@ -23,8 +24,12 @@ import 'base_list_pro_state.dart';
 /// - Analytics hooks
 /// - Simplified state management
 class BaseListProBloc<T, F> extends Bloc<BaseListProEvent, BaseListProState<T>> {
-  /// Repository for data operations
+  /// Repository for data operations (full interface)
   final ListRepository<T, F>? repository;
+
+  /// Fetch UseCase - for Clean Architecture pattern
+  /// Priority: fetchUseCase > repository > legacyApi
+  final GetListUseCase<T, F>? fetchUseCase;
 
   /// Legacy API function (for backward compatibility)
   final Future<Result<ListResponse<T>>> Function(int page, int limit, F? filter)? legacyApi;
@@ -52,6 +57,7 @@ class BaseListProBloc<T, F> extends Bloc<BaseListProEvent, BaseListProState<T>> 
 
   BaseListProBloc({
     this.repository,
+    this.fetchUseCase,
     this.legacyApi,
     this.pageSize = 20,
     int cacheSize = 10,
@@ -84,11 +90,22 @@ class BaseListProBloc<T, F> extends Bloc<BaseListProEvent, BaseListProState<T>> 
     return filter?.toString() ?? '_default_';
   }
 
-  /// Fetch data using repository or legacy API
+  /// Fetch data using useCase, repository, or legacy API
+  /// Priority: fetchUseCase > repository > legacyApi
   Future<Result<ListResponse<T>>> _fetchData(int page, F? filter) async {
+    // Priority 1: UseCase (Clean Architecture)
+    if (fetchUseCase != null) {
+      return fetchUseCase!.call(ListParams(
+        page: page,
+        limit: pageSize,
+        filter: filter,
+      ));
+    }
+    // Priority 2: Repository
     if (repository != null) {
       return repository!.getItems(page: page, limit: pageSize, filter: filter);
     }
+    // Priority 3: Legacy API
     if (legacyApi != null) {
       return legacyApi!(page, pageSize, filter);
     }

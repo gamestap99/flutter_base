@@ -99,7 +99,9 @@ class [Name]Repository implements ListRepository<[Entity], [FilterType]> {
 
 ## Step 2: Tạo ListBloc
 
-Tạo BLoC extend `BaseListProBloc<T, F>`:
+Có 2 cách tạo ListBloc - chọn phù hợp với architecture:
+
+### Option A: Dùng Repository (Simple)
 
 ```dart
 import 'package:flutter_base/flutter_base.dart';
@@ -120,6 +122,54 @@ class [Name]ListBloc extends BaseListProBloc<[Entity], [FilterType]> {
         );
 }
 ```
+
+### Option B: Dùng UseCase (Clean Architecture)
+
+Khi muốn tách biệt business logic ra riêng:
+
+```dart
+// 1. Tạo UseCase
+class Get[Name]sUseCase extends GetListUseCase<[Entity], [FilterType]> {
+  final [Name]Repository _repository;
+  
+  const Get[Name]sUseCase(this._repository);
+  
+  @override
+  Future<Result<ListResponse<[Entity]>>> call(ListParams<[FilterType]> params) {
+    // Có thể thêm business logic ở đây
+    return _repository.getItems(
+      page: params.page,
+      limit: params.limit,
+      filter: params.filter,
+    );
+  }
+}
+
+// 2. Tạo Bloc với UseCase
+class [Name]ListBloc extends BaseListProBloc<[Entity], [FilterType]> {
+  [Name]ListBloc({required Get[Name]sUseCase getUseCase})
+      : super(
+          fetchUseCase: getUseCase,  // Dùng fetchUseCase thay vì repository
+          pageSize: 20,
+          cacheTTL: const Duration(minutes: 5),
+          onAnalytics: (event) => debugPrint('📊 [Name]List: $event'),
+        );
+}
+
+// 3. Inject trong Screen
+BlocProvider<BaseListProBloc<[Entity], [FilterType]>>(
+  create: (_) => [Name]ListBloc(
+    getUseCase: Get[Name]sUseCase([Name]Repository(api)),
+  )..load(),
+  child: const [Name]ListContent(),
+);
+```
+
+**Ưu điểm UseCase pattern:**
+- Tách biệt business logic khỏi Repository
+- Dễ test (mock UseCase)
+- Phù hợp với Clean Architecture  
+- Có thể compose nhiều repositories trong 1 UseCase
 
 ## Step 3: Tạo Screen với BaseListProWidget
 
