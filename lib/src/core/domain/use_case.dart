@@ -16,16 +16,16 @@ abstract class BaseUseCase<T> {
 }
 
 /// Use case with parameters - returns Result for error handling
-abstract class UseCase<T, P> extends BaseUseCase<T> {
-  const UseCase() : super();
+abstract class ResultUseCase<T, P> extends BaseUseCase<T> {
+  const ResultUseCase() : super();
 
   /// Execute the use case with given parameters
   Future<Result<T>> call(P params);
 }
 
-/// Use case without parameters
-abstract class NoParamsUseCase<T> extends BaseUseCase<T> {
-  const NoParamsUseCase() : super();
+/// Use case without parameters - returns Result for error handling
+abstract class NoParamsResultUseCase<T> extends BaseUseCase<T> {
+  const NoParamsResultUseCase() : super();
 
   /// Execute the use case without parameters
   Future<Result<T>> call();
@@ -133,7 +133,7 @@ mixin ListParamsFilterMixin {
 
 /// UseCase for fetching paginated list
 /// Can be used standalone without full Repository implementation
-abstract class GetListUseCase<T, F> extends UseCase<ListResponse<T>, ListParams<F>> {
+abstract class GetListUseCase<T, F> extends ResultUseCase<ListResponse<T>, ListParams<F>> {
   const GetListUseCase() : super();
 
   @override
@@ -141,7 +141,7 @@ abstract class GetListUseCase<T, F> extends UseCase<ListResponse<T>, ListParams<
 }
 
 /// UseCase for creating an item
-abstract class CreateItemUseCase<T> extends UseCase<T, T> {
+abstract class CreateItemUseCase<T> extends ResultUseCase<T, T> {
   const CreateItemUseCase() : super();
 
   @override
@@ -149,7 +149,7 @@ abstract class CreateItemUseCase<T> extends UseCase<T, T> {
 }
 
 /// UseCase for updating an item
-abstract class UpdateItemUseCase<T> extends UseCase<T, T> {
+abstract class UpdateItemUseCase<T> extends ResultUseCase<T, T> {
   const UpdateItemUseCase() : super();
 
   @override
@@ -157,7 +157,7 @@ abstract class UpdateItemUseCase<T> extends UseCase<T, T> {
 }
 
 /// UseCase for deleting an item
-abstract class DeleteItemUseCase<T> extends UseCase<void, T> {
+abstract class DeleteItemUseCase<T> extends ResultUseCase<void, T> {
   const DeleteItemUseCase() : super();
 
   @override
@@ -169,7 +169,7 @@ abstract class DeleteItemUseCase<T> extends UseCase<void, T> {
 // ============================================================================
 
 /// UseCase for fetching single item
-abstract class GetItemUseCase<T, F> extends UseCase<T, F> {
+abstract class GetItemUseCase<T, F> extends ResultUseCase<T, F> {
   const GetItemUseCase() : super();
 
   @override

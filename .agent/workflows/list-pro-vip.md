@@ -123,12 +123,12 @@ class [Name]ListBloc extends BaseListProBloc<[Entity], [FilterType]> {
 }
 ```
 
-### Option B: Dùng UseCase (Clean Architecture)
+### Option B: Dùng GetListUseCase (Clean Architecture với Result)
 
-Khi muốn tách biệt business logic ra riêng:
+Khi muốn tách biệt business logic và dùng Result pattern:
 
 ```dart
-// 1. Tạo UseCase
+// 1. Tạo UseCase (extends ResultUseCase)
 class Get[Name]sUseCase extends GetListUseCase<[Entity], [FilterType]> {
   final [Name]Repository _repository;
   
@@ -145,31 +145,53 @@ class Get[Name]sUseCase extends GetListUseCase<[Entity], [FilterType]> {
   }
 }
 
-// 2. Tạo Bloc với UseCase
+// 2. Tạo Bloc với fetchUseCase
 class [Name]ListBloc extends BaseListProBloc<[Entity], [FilterType]> {
   [Name]ListBloc({required Get[Name]sUseCase getUseCase})
       : super(
-          fetchUseCase: getUseCase,  // Dùng fetchUseCase thay vì repository
+          fetchUseCase: getUseCase,
           pageSize: 20,
-          cacheTTL: const Duration(minutes: 5),
-          onAnalytics: (event) => debugPrint('📊 [Name]List: $event'),
         );
 }
-
-// 3. Inject trong Screen
-BlocProvider<BaseListProBloc<[Entity], [FilterType]>>(
-  create: (_) => [Name]ListBloc(
-    getUseCase: Get[Name]sUseCase([Name]Repository(api)),
-  )..load(),
-  child: const [Name]ListContent(),
-);
 ```
 
-**Ưu điểm UseCase pattern:**
-- Tách biệt business logic khỏi Repository
-- Dễ test (mock UseCase)
-- Phù hợp với Clean Architecture  
-- Có thể compose nhiều repositories trong 1 UseCase
+### Option C: Dùng UseCase có sẵn (mà không wrap Result)
+
+Khi đã có UseCase trong project (ví dụ: `UseCase<ItemsResEntity<T>, Param>`):
+
+```dart
+// UseCase có sẵn của bạn
+class PostGetListUseCase extends UseCase<ItemsResEntity<PostEntity>, PostGetListParam> {
+  @override
+  Future<ItemsResEntity<PostEntity>> call(PostGetListParam params) => ...
+}
+
+// Tạo Bloc với legacyApi adapter
+class PostListBloc extends BaseListProBloc<PostEntity, PostGetListParam> {
+  PostListBloc({required PostGetListUseCase useCase})
+      : super(
+          legacyApi: (page, limit, filter) async {
+            try {
+              final param = filter ?? PostGetListParam(page: page, limit: limit);
+              final result = await useCase.call(param);
+              return Result.success(ListResponse.fromMeta(
+                items: result.items,
+                meta: result.meta,
+              ));
+            } catch (e, st) {
+              return Result.failure(UnknownFailure.fromException(e, st));
+            }
+          },
+        );
+}
+```
+
+**So sánh các options:**
+| Option | Khi nào dùng |
+|--------|--------------|
+| A (Repository) | Project đơn giản, không cần tách UseCase |
+| B (GetListUseCase) | Clean Architecture, muốn dùng Result pattern |
+| C (legacyApi adapter) | Đã có UseCase không wrap Result |
 
 ## Step 3: Tạo Screen với BaseListProWidget
 
