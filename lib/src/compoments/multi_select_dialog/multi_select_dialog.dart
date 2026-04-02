@@ -180,12 +180,12 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
       padding: const EdgeInsets.all(2.0),
       child: ChoiceChip(
         backgroundColor: widget.unselectedColor,
-        selectedColor: widget.colorator?.call(item.value) ?? widget.selectedColor ?? Theme.of(context).primaryColor.withOpacity(0.35),
+        selectedColor: widget.colorator?.call(item.value) ?? widget.selectedColor ?? Theme.of(context).primaryColor.withValues(alpha: 0.35),
         label: Text(
           item.label,
           style: item.selected
               ? TextStyle(
-                  color: widget.selectedItemsTextStyle?.color ?? widget.colorator?.call(item.value) ?? widget.selectedColor?.withOpacity(1) ?? Theme.of(context).primaryColor,
+                  color: widget.selectedItemsTextStyle?.color ?? widget.colorator?.call(item.value) ?? widget.selectedColor?.withValues(alpha: 1) ?? Theme.of(context).primaryColor,
                   fontSize: widget.selectedItemsTextStyle?.fontSize,
                 )
               : widget.itemsTextStyle,
@@ -321,7 +321,7 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
                   Text(
                     "CANCEL",
                     style: TextStyle(
-                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 1) : Theme.of(context).primaryColor,
                     ),
                   ),
               onPressed: () {
@@ -333,7 +333,7 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
                   Text(
                     'OK',
                     style: TextStyle(
-                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 1) : Theme.of(context).primaryColor,
                     ),
                   ),
               onPressed: () {

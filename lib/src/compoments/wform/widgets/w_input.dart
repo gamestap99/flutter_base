@@ -223,7 +223,7 @@ class _WInputState extends State<WInput> {
               enabledBorder: widget.enabledBorder ??
                   OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(CSpace.medium)),
-                    borderSide: BorderSide(color: CColor.primary.withOpacity(widget.value != '' ? 0.3 : 0), width: 0),
+                    borderSide: BorderSide(color: CColor.primary.withValues(alpha: widget.value != '' ? 0.3 : 0), width: 0),
                   ),
               errorBorder: widget.errorBorder ??
                   const OutlineInputBorder(

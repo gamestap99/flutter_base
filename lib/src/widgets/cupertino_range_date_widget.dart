@@ -117,7 +117,7 @@ class _CupertinoRangeDateWidgetState extends State<CupertinoRangeDateWidget> {
                 selectionColor: CColor.primary,
                 startRangeSelectionColor: CColor.primary,
                 endRangeSelectionColor: CColor.primary,
-                rangeSelectionColor: CColor.primaryAccent.withOpacity(0.2),
+                rangeSelectionColor: CColor.primaryAccent.withValues(alpha: 0.2),
                 rangeTextStyle: widget.rangeTextStyle ??
                     textStyle.copyWith(
                       color: CColor.darker,

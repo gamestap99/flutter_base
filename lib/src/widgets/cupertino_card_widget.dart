@@ -33,7 +33,7 @@ class CupertinoCardWidget extends StatelessWidget {
           boxShadow: boxShadow ??
               [
                 BoxShadow(
-                  color: CupertinoColors.black.withOpacity(0.1), // Bóng mờ nhẹ
+                  color: CupertinoColors.black.withValues(alpha: 0.1), // Bóng mờ nhẹ
                   spreadRadius: 0,
                   blurRadius: 10, // Độ mờ bóng
                   offset: const Offset(0, 5), // Độ lệch bóng (theo chiều dọc 5px)

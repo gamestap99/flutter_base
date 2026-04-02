@@ -84,7 +84,7 @@ class _CupertinoSliverPageScaffoldState extends State<CupertinoSliverPageScaffol
     return Border(
       bottom: BorderSide(
         width: 0.0,
-        color: kBorderColor.withOpacity(visibility),
+        color: kBorderColor.withValues(alpha: visibility),
       ),
     );
   }

@@ -157,7 +157,7 @@ class _Build extends StatelessWidget {
                     }
                   },
                   child: Ink(
-                    color: value == items[index].name ? CColor.primaryAccent.withOpacity(0.2) : null,
+                    color: value == items[index].name ? CColor.primaryAccent.withValues(alpha: 0.2) : null,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,

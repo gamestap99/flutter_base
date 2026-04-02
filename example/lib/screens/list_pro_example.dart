@@ -18,10 +18,11 @@ class ListProExampleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ⚠️ KHÔNG gọi ..load() ở đây! BaseListProWidget sẽ tự động load.
     return BlocProvider<BaseListProBloc<ProjectEntity, dynamic>>(
       create: (_) => ProjectListBloc(
         repository: ProjectRepository(),
-      )..load(),
+      ),
       child: const _ListProExampleContent(),
     );
   }

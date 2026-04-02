@@ -160,9 +160,14 @@ class ProductListBloc extends BaseListProBloc<Product, ProductFilter> {
 
 ### Sử dụng Widget
 
+> ⚠️ **QUAN TRỌNG**: **KHÔNG gọi `..load()` trong `BlocProvider.create`!**  
+> `BaseListProWidget` đã TỰ ĐỘNG gọi `load()` trong `initState()`.  
+> Nếu gọi thêm `..load()`, API sẽ bị duplicate gọi 2 lần!
+
 ```dart
 BlocProvider(
-  create: (_) => ProductListBloc(repository: repo)..load(),
+  // ✅ ĐÚNG: Không có ..load()
+  create: (_) => ProductListBloc(repository: repo),
   child: BaseListProWidget<Product, ProductFilter>(
     buildItem: (product, index) => ProductCard(product),
     buildLoading: () => ProductSkeleton(),

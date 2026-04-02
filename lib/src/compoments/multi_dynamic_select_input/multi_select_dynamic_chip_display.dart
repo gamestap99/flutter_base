@@ -108,7 +108,7 @@ class MultiSelectDynamicChipDisplay<V> extends StatelessWidget {
         avatar: icon != null
             ? Icon(
                 icon!.icon,
-                color: colorator != null && colorator!(item.value) != null ? colorator!(item.value)!.withOpacity(1) : icon!.color ?? Theme.of(context).primaryColor,
+                color: colorator != null && colorator!(item.value) != null ? colorator!(item.value)!.withValues(alpha: 1) : icon!.color ?? Theme.of(context).primaryColor,
               )
             : null,
         label: Container(
@@ -126,14 +126,14 @@ class MultiSelectDynamicChipDisplay<V> extends StatelessWidget {
                   : textStyle != null && textStyle!.color != null
                       ? textStyle!.color
                       : chipColor != null
-                          ? chipColor!.withOpacity(1)
+                          ? chipColor!.withValues(alpha: 1)
                           : null,
               fontSize: textStyle != null ? textStyle!.fontSize : null,
             ),
           ),
         ),
         selected: items!.contains(item),
-        selectedColor: colorator != null && colorator!(item.value) != null ? colorator!(item.value) : chipColor ?? Theme.of(context).primaryColor.withOpacity(0.33),
+        selectedColor: colorator != null && colorator!(item.value) != null ? colorator!(item.value) : chipColor ?? Theme.of(context).primaryColor.withValues(alpha: 0.33),
         onSelected: (_) {
           if (onTap != null) onTap!(item);
         },

@@ -17,6 +17,102 @@ dependencies:
       ref: main
 ```
 
+---
+
+## ⚠️ QUAN TRỌNG: BaseListProWidget đã tự động xử lý gì?
+
+Khi dùng `BaseListProWidget`, widget **ĐÃ TỰ ĐỘNG** xử lý nhiều tác vụ. Hiểu rõ để tránh duplicate code/API calls!
+
+### ✅ BaseListProWidget TỰ ĐỘNG xử lý (KHÔNG cần làm thủ công):
+
+| Tính năng | Mô tả | Tại sao không cần làm thủ công |
+|-----------|-------|--------------------------------|
+| **Load dữ liệu ban đầu** | Gọi `bloc.load()` trong `initState()` | ❌ **KHÔNG gọi `..load()` trong BlocProvider.create!** |
+| **Pull-to-refresh** | Wrap sẵn `RefreshIndicator` + gọi `bloc.refresh()` | Không cần wrap thêm RefreshIndicator |
+| **Load more (pagination)** | Dùng `VisibilityDetector` auto gọi `bloc.loadMore()` khi scroll gần cuối | Không cần listen scroll manually |
+| **Hiển thị loading state** | Build loading UI từ `buildLoading` callback | Không cần BlocBuilder cho loading |
+| **Hiển thị error state** | Build error UI từ `buildError` callback với retry button | Không cần BlocBuilder cho error |
+| **Hiển thị empty state** | Build empty UI từ `buildEmpty` callback | Không cần check items.isEmpty |
+| **Scroll controller** | Tạo và quản lý ScrollController tự động | Chỉ truyền vào nếu cần share controller |
+| **Re-load khi filter thay đổi** | Set `autoFilter: true` để auto reload | Không cần didUpdateWidget manually |
+
+### ❌ SAI - Những lỗi phổ biến cần tránh:
+
+```dart
+// ❌ SAI #1: Gọi load() 2 lần
+BlocProvider(
+  create: (_) => MyBloc()..load(),  // API call #1
+  child: BaseListProWidget(...),     // API call #2 trong initState
+)
+
+// ❌ SAI #2: Wrap thêm RefreshIndicator (đã có sẵn trong widget)
+RefreshIndicator(
+  onRefresh: () => bloc.refresh(),
+  child: BaseListProWidget(...),  // Đã có RefreshIndicator bên trong!
+)
+
+// ❌ SAI #3: Manually gọi loadMore trong scroll listener
+NotificationListener<ScrollNotification>(
+  onNotification: (notification) {
+    if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 200) {
+      bloc.loadMore();  // Widget đã auto handle load more!
+    }
+    return false;
+  },
+  child: BaseListProWidget(...),
+)
+
+// ❌ SAI #4: BlocBuilder cho loading/error (widget đã handle)
+BlocBuilder<MyBloc, MyState>(
+  builder: (context, state) {
+    if (state.isLoading) return Loading();  // Thừa!
+    if (state.isError) return Error();      // Thừa!
+    return BaseListProWidget(...);
+  },
+)
+```
+
+### ✅ ĐÚNG - Cách dùng chính xác:
+
+```dart
+// ✅ ĐÚNG: Không gọi load(), widget tự handle
+BlocProvider<BaseListProBloc<Entity, Filter>>(
+  create: (_) => MyListBloc(repository: repo),  // Không có ..load()
+  child: BaseListProWidget<Entity, Filter>(
+    buildItem: (item, index) => ItemCard(item: item),
+    buildLoading: () => LoadingSkeleton(),
+    buildEmpty: () => EmptyView(),
+    buildError: (failure, retry) => ErrorView(failure, onRetry: retry),
+  ),
+)
+```
+
+### 🔧 Khi NÊN tự gọi thủ công:
+
+| Trường hợp | Nên làm gì |
+|------------|------------|
+| **Load lại sau khi create/update/delete** | Gọi `bloc.refresh()` sau thành công |
+| **Filter/Search thay đổi từ UI khác** | Gọi `bloc.load(filter: newFilter)` |
+| **Force refresh (bypass cache)** | Gọi `bloc.refresh(force: true)` |
+| **Cần load với filter ban đầu** | Dùng `queryParameters` prop của widget |
+| **Không dùng BaseListProWidget** | Phải tự gọi `bloc.load()` trong initState |
+
+### 📌 Tóm tắt quan trọng:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Dùng BaseListProWidget      │  KHÔNG dùng BaseListProWidget           │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ❌ KHÔNG gọi ..load()       │  ✅ PHẢI gọi ..load() trong create      │
+│  ❌ KHÔNG wrap RefreshIndicator  │  ✅ PHẢI tự wrap RefreshIndicator   │
+│  ❌ KHÔNG listen scroll      │  ✅ PHẢI tự handle load more            │
+│  ❌ KHÔNG BlocBuilder cho    │  ✅ PHẢI tự BlocBuilder cho             │
+│     loading/error            │     tất cả states                       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Step 1: Tạo ListRepository
 
 Tạo file repository implement `ListRepository<T, F>`:
@@ -193,6 +289,82 @@ class PostListBloc extends BaseListProBloc<PostEntity, PostGetListParam> {
 | B (GetListUseCase) | Clean Architecture, muốn dùng Result pattern |
 | C (legacyApi adapter) | Đã có UseCase không wrap Result |
 
+### Các UseCase classes có sẵn trong flutter_base
+
+Tất cả các UseCase trong flutter_base đều extends `ResultUseCase` và return `Result<T>`:
+
+```dart
+// Base classes
+abstract class ResultUseCase<T, P> {
+  Future<Result<T>> call(P params);
+}
+
+abstract class NoParamsResultUseCase<T> {
+  Future<Result<T>> call();
+}
+```
+
+**Specialized UseCase classes:**
+
+| Class | Mục đích | Signature |
+|-------|----------|-----------|
+| `GetListUseCase<T, F>` | Lấy danh sách có pagination | `call(ListParams<F>)` → `Result<ListResponse<T>>` |
+| `GetItemUseCase<T, F>` | Lấy 1 item | `call(F filter)` → `Result<T>` |
+| `CreateItemUseCase<T>` | Tạo mới item | `call(T item)` → `Result<T>` |
+| `UpdateItemUseCase<T>` | Cập nhật item | `call(T item)` → `Result<T>` |
+| `DeleteItemUseCase<T>` | Xóa item | `call(T item)` → `Result<void>` |
+
+**Ví dụ implement đầy đủ:**
+
+```dart
+// GetListUseCase
+class GetPostsUseCase extends GetListUseCase<PostEntity, PostFilter> {
+  final PostRepository _repo;
+  GetPostsUseCase(this._repo);
+  
+  @override
+  Future<Result<ListResponse<PostEntity>>> call(ListParams<PostFilter> params) {
+    return _repo.getItems(page: params.page, limit: params.limit, filter: params.filter);
+  }
+}
+
+// GetItemUseCase
+class GetPostUseCase extends GetItemUseCase<PostEntity, int> {
+  final PostRepository _repo;
+  GetPostUseCase(this._repo);
+  
+  @override
+  Future<Result<PostEntity>> call(int id) => _repo.getById(id);
+}
+
+// CreateItemUseCase
+class CreatePostUseCase extends CreateItemUseCase<PostEntity> {
+  final PostRepository _repo;
+  CreatePostUseCase(this._repo);
+  
+  @override
+  Future<Result<PostEntity>> call(PostEntity post) => _repo.create(post);
+}
+
+// UpdateItemUseCase
+class UpdatePostUseCase extends UpdateItemUseCase<PostEntity> {
+  final PostRepository _repo;
+  UpdatePostUseCase(this._repo);
+  
+  @override
+  Future<Result<PostEntity>> call(PostEntity post) => _repo.update(post);
+}
+
+// DeleteItemUseCase  
+class DeletePostUseCase extends DeleteItemUseCase<PostEntity> {
+  final PostRepository _repo;
+  DeletePostUseCase(this._repo);
+  
+  @override
+  Future<Result<void>> call(PostEntity post) => _repo.delete(post.id);
+}
+```
+
 ## Step 3: Tạo Screen với BaseListProWidget
 
 ```dart
@@ -211,11 +383,21 @@ class [Name]ListScreen extends StatelessWidget {
     return BlocProvider<BaseListProBloc<[Entity], [FilterType]>>(
       create: (_) => [Name]ListBloc(
         repository: [Name]Repository(context.read<Api>()),
-      )..load(), // Load ngay khi khởi tạo
+      ), // ⚠️ KHÔNG GỌI ..load() Ở ĐÂY! BaseListProWidget sẽ tự động load.
       child: const _[Name]ListContent(),
     );
   }
 }
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║ ⚠️ CẢNH BÁO: KHÔNG GỌI load() TRONG BlocProvider.create!                 ║
+// ║                                                                          ║
+// ║ BaseListProWidget đã TỰ ĐỘNG gọi load() trong initState().               ║
+// ║ Nếu bạn gọi ..load() trong BlocProvider.create, API sẽ bị gọi 2 lần!    ║
+// ║                                                                          ║
+// ║ ❌ SAI:  create: (_) => Bloc()..load()                                   ║
+// ║ ✅ ĐÚNG: create: (_) => Bloc()                                           ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 class _[Name]ListContent extends StatelessWidget {
   const _[Name]ListContent();

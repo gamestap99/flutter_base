@@ -347,7 +347,7 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
             if (widget.onConfirm != null) widget.onConfirm!(_selectedItems);
           },
           decoration: widget.chipDisplay!.decoration,
-          chipColor: widget.chipDisplay!.chipColor ?? ((widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(0.35) : null),
+          chipColor: widget.chipDisplay!.chipColor ?? ((widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 0.35) : null),
           alignment: widget.chipDisplay!.alignment,
           textStyle: widget.chipDisplay!.textStyle,
           icon: null,
@@ -363,7 +363,7 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
       return MultiSelectChipDisplay<V>(
         items: chipDisplayItems,
         colorator: widget.colorator,
-        chipColor: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(0.35) : null,
+        chipColor: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 0.35) : null,
       );
     }
   }
@@ -394,7 +394,7 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
                         borderRadius: const BorderRadius.all(Radius.circular(16)),
                         border: Border.all(
                           color: widget.state != null && widget.state!.hasError
-                              ? Colors.red.shade800.withOpacity(0.6)
+                              ? Colors.red.shade800.withValues(alpha: 0.6)
                               : _selectedItems.isNotEmpty
                                   ? (widget.selectedColor != null && widget.selectedColor != Colors.transparent)
                                       ? widget.selectedColor!

@@ -51,10 +51,11 @@ class ListProUseCaseExampleScreen extends StatelessWidget {
     final repository = ProjectRepository();
     final getProjectsUseCase = GetProjectsUseCase(repository);
 
+    // ⚠️ KHÔNG gọi ..load() ở đây! BaseListProWidget sẽ tự động load.
     return BlocProvider<BaseListProBloc<ProjectEntity, dynamic>>(
       create: (_) => ProjectListWithUseCaseBloc(
         getProjectsUseCase: getProjectsUseCase,
-      )..load(),
+      ),
       child: const _ListProUseCaseContent(),
     );
   }
