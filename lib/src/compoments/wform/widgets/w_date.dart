@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_base/flutter_base.dart';
 import 'package:flutter_base/src/constants/color.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../constants/dimens.dart';
+import '../../../constants/index.dart';
 import '../index.dart';
 
 class WDate extends StatefulWidget {
@@ -128,32 +130,46 @@ class _WDateState extends State<WDate> {
           builder: (BuildContext context) {
             return AlertDialog(
               content: SingleChildScrollView(
-                  child: SizedBox(
-                      width: 250,
-                      child: SfDateRangePicker(
-                        maxDate: widget.selectDateType == SelectDateType.before ? DateTime.now() : null,
-                        minDate: widget.selectDateType == SelectDateType.after ? DateTime.now() : null,
-                        initialSelectedDate: selectedDate,
-                        // headerStyle: DateRangePickerHeaderStyle(textStyle: CStyle.headline4()),
-                        view: DateRangePickerView.month,
-                        selectionMode: DateRangePickerSelectionMode.single,
-                        onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                          SchedulerBinding.instance.addPostFrameCallback((duration) async {
-                            if (widget.onChanged != null) {
-                              selectedDate = args.value;
-                              initializeDateFormatting();
-                              widget.controller.text = DateFormat(widget.format).format(args.value);
-                              format = DateFormat(widget.format).format(args.value);
-                              widget.onChanged!(args.value);
-                              await Future.delayed(const Duration(milliseconds: 100));
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                                setState(() {});
-                              }
-                            }
-                          });
-                        },
-                      ))),
+                child: SizedBox(
+                  width: 250,
+                  child: SfDateRangePicker(
+                    todayHighlightColor: CColor.primary,
+                    backgroundColor: Colors.transparent,
+                    maxDate: widget.selectDateType == SelectDateType.before ? DateTime.now() : null,
+                    minDate: widget.selectDateType == SelectDateType.after ? DateTime.now() : null,
+                    initialSelectedDate: selectedDate,
+                    // headerStyle: DateRangePickerHeaderStyle(textStyle: CStyle.headline4()),
+                    view: DateRangePickerView.month,
+                    selectionMode: DateRangePickerSelectionMode.single,
+                    selectionColor: CColor.primary,
+                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                      SchedulerBinding.instance.addPostFrameCallback((duration) async {
+                        if (widget.onChanged != null) {
+                          selectedDate = args.value;
+                          initializeDateFormatting();
+                          widget.controller.text = DateFormat(widget.format).format(args.value);
+                          format = DateFormat(widget.format).format(args.value);
+                          widget.onChanged!(args.value);
+                          await Future.delayed(const Duration(milliseconds: 100));
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                            setState(() {});
+                          }
+                        }
+                      });
+                    },
+                    headerStyle: DateRangePickerHeaderStyle(
+                      backgroundColor: Colors.transparent,
+                      textAlign: TextAlign.start,
+                      textStyle: CStyle.headline4(
+                        style: const TextStyle(
+                          color: CColor.textDark1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               contentPadding: const EdgeInsets.all(8),
             );
           },

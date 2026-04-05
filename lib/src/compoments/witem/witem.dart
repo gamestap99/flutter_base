@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/flutter_base.dart';
-import 'package:flutter_base/src/compoments/error_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BaseItemWidget<T, F> extends StatefulWidget {

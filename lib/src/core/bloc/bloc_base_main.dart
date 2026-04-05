@@ -22,6 +22,7 @@ abstract class BlocBaseMain<E extends BlocBaseEvent, S extends BlocBaseState> ex
     }
 
     onStart();
+
     try {
       final data = await dataApi;
 

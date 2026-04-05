@@ -347,7 +347,7 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
             if (widget.onConfirm != null) widget.onConfirm!(_selectedItems);
           },
           decoration: widget.chipDisplay!.decoration,
-          chipColor: widget.chipDisplay!.chipColor ?? ((widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(0.35) : null),
+          chipColor: widget.chipDisplay!.chipColor ?? ((widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 0.35) : null),
           alignment: widget.chipDisplay!.alignment,
           textStyle: widget.chipDisplay!.textStyle,
           icon: null,
@@ -363,7 +363,7 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
       return MultiSelectChipDisplay<V>(
         items: chipDisplayItems,
         colorator: widget.colorator,
-        chipColor: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(0.35) : null,
+        chipColor: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 0.35) : null,
       );
     }
   }
@@ -378,62 +378,65 @@ class __MultiSelectDialogFieldViewState<V> extends State<_MultiSelectDialogField
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        InkWell(
-          onTap: () {
-            widget.onCallbackBuilder((item) => onChanged(item.call()));
-          },
-          child: Container(
-            decoration: widget.state != null
-                ? widget.decoration ??
-                    BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      border: Border.all(
-                        color: widget.state != null && widget.state!.hasError
-                            ? Colors.red.shade800.withOpacity(0.6)
-                            : _selectedItems.isNotEmpty
-                                ? (widget.selectedColor != null && widget.selectedColor != Colors.transparent)
-                                    ? widget.selectedColor!
-                                    : Theme.of(context).primaryColor
-                                : Colors.black45,
-                        width: _selectedItems.isNotEmpty
-                            ? (widget.state != null && widget.state!.hasError)
-                                ? 1.4
-                                : 1.8
-                            : 1.2,
-                      ),
-                    )
-                : widget.decoration,
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _selectedItems.isNotEmpty ? Expanded(child: _buildInheritedChipDisplay()) : widget.buttonText ?? const Text("Select"),
-                _selectedItems.isNotEmpty ? const SizedBox.shrink() : (widget.buttonIcon ?? const Icon(Icons.arrow_downward)),
-              ],
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              widget.onCallbackBuilder((item) => onChanged(item.call()));
+            },
+            child: Container(
+              decoration: widget.state != null
+                  ? widget.decoration ??
+                      BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        border: Border.all(
+                          color: widget.state != null && widget.state!.hasError
+                              ? Colors.red.shade800.withValues(alpha: 0.6)
+                              : _selectedItems.isNotEmpty
+                                  ? (widget.selectedColor != null && widget.selectedColor != Colors.transparent)
+                                      ? widget.selectedColor!
+                                      : Theme.of(context).primaryColor
+                                  : Colors.black45,
+                          width: _selectedItems.isNotEmpty
+                              ? (widget.state != null && widget.state!.hasError)
+                                  ? 1.4
+                                  : 1.8
+                              : 1.2,
+                        ),
+                      )
+                  : widget.decoration,
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _selectedItems.isNotEmpty ? Expanded(child: _buildInheritedChipDisplay()) : widget.buttonText ?? const Text("Select"),
+                  _selectedItems.isNotEmpty ? const SizedBox.shrink() : (widget.buttonIcon ?? const Icon(Icons.arrow_downward)),
+                ],
+              ),
             ),
           ),
-        ),
-        widget.state != null && widget.state!.hasError ? const SizedBox(height: 5) : Container(),
-        widget.state != null && widget.state!.hasError
-            ? Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: Text(
-                      widget.state!.errorText!,
-                      style: TextStyle(
-                        color: Colors.red[800],
-                        fontSize: 12.5,
+          widget.state != null && widget.state!.hasError ? const SizedBox(height: 5) : Container(),
+          widget.state != null && widget.state!.hasError
+              ? Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        widget.state!.errorText!,
+                        style: TextStyle(
+                          color: Colors.red[800],
+                          fontSize: 12.5,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            : Container(),
-      ],
+                  ],
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 }

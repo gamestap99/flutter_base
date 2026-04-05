@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../flutter_base.dart';
-import '../compoments/custom_button.dart';
 import '../constants/color.dart';
 
 class RangeDateWidget extends StatefulWidget {
@@ -126,6 +125,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SfDateRangePicker(
                   controller: controller,
+                  backgroundColor: Colors.transparent,
                   enableMultiView: true,
                   maxDate: DateTime(DateTime.now().year, DateTime.now().month + 1),
                   initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month - 1),
@@ -139,7 +139,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                   selectionColor: CColor.primary,
                   startRangeSelectionColor: CColor.primary,
                   endRangeSelectionColor: CColor.primary,
-                  rangeSelectionColor: CColor.primaryAccent.withOpacity(0.2),
+                  rangeSelectionColor: CColor.primaryAccent.withValues(alpha: 0.2),
                   rangeTextStyle: CStyle.paragraph1(
                     style: const TextStyle(
                       color: CColor.darker,
@@ -150,6 +150,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                     enableSwipeSelection: false,
                   ),
                   headerStyle: DateRangePickerHeaderStyle(
+                    backgroundColor: Colors.transparent,
                     textAlign: TextAlign.start,
                     textStyle: CStyle.headline4(
                       style: const TextStyle(
@@ -160,6 +161,7 @@ class _RangeDateWidgetState extends State<RangeDateWidget> {
                   navigationDirection: DateRangePickerNavigationDirection.vertical,
                   monthCellStyle: const DateRangePickerMonthCellStyle(),
                   selectableDayPredicate: widget.selectableDayPredicate,
+                  todayHighlightColor: CColor.primary,
                   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                     try {
                       if (args.value is PickerDateRange) {

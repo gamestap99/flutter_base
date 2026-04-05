@@ -1,0 +1,144 @@
+import 'package:example/screens/cupertino_card_screen.dart';
+import 'package:example/screens/cupertino_range_date_widget.dart';
+import 'package:example/screens/custom_cupertino_page_scaffold_screen.dart';
+import 'package:example/screens/demo_form/demo_form_screen.dart';
+import 'package:example/screens/form_pro_example.dart';
+import 'package:example/screens/item_pro_example.dart';
+import 'package:example/screens/list_cupertino_fetch_data.dart';
+import 'package:example/screens/list_fetch_data.dart';
+import 'package:example/screens/list_pro_example.dart';
+import 'package:example/screens/test.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(platform: TargetPlatform.iOS),
+      darkTheme: ThemeData.dark().copyWith(platform: TargetPlatform.iOS),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        SfGlobalLocalizations.delegate,
+      ],
+      supportedLocales: const <Locale>[Locale('en', 'US'), Locale('ar', 'AE'), Locale('vi')],
+      locale: const Locale('vi'),
+      builder: (context, Widget? child) => CupertinoTheme(
+        data: CupertinoThemeData(
+          brightness: Theme.of(context).brightness,
+          scaffoldBackgroundColor: CupertinoColors.secondarySystemBackground,
+        ),
+        child: child!,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    List<Map<String, dynamic>> items = [
+      {
+        "title": "List Cupertino fetch data",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const ListCupertinoFetchData();
+            })),
+      },
+      {
+        "title": "Cupertino Range Date",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CupertinoRangeDateScreen();
+            })),
+      },
+      {
+        "title": "Cupertino Card Screen",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CupertinoCardScreen();
+            })),
+      },
+      {
+        "title": "Custom Cupertino Page Scaffold Screen",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+              return const CustomCupertinoPageScaffoldScreen();
+            })),
+      },
+      {
+        "title": "Demo form",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const DemoFormScreen();
+        })),
+      },
+      // ============ PRO EXAMPLES ============
+      {
+        "title": "📊 List Pro Example",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+          return const ListProExampleScreen();
+        })),
+      },
+      {
+        "title": "📋 Form Pro Example",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+          return const FormProExampleScreen();
+        })),
+      },
+      {
+        "title": "📦 Item Pro Example",
+        'func': () => Navigator.push(context, CupertinoPageRoute(builder: (context) {
+          return const ItemProExampleScreen();
+        })),
+      },
+      // ======================================
+      {
+        "title": "Demo Test",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const Test();
+        })),
+      },  {
+        "title": "ListFetchData",
+        'func': ( ) => Navigator.push(context, CupertinoPageRoute(builder: (context){
+          return const ListFetchData();
+        })),
+      },
+    ];
+
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(widget.title),
+      ),
+      child: ListView(
+        children: items
+            .map(
+              (e) => Card(
+                child: ListTile(
+                  onTap: e['func'],
+                  title: Text(e['title']),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                ),
+              ),
+            )
+            .toList(),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}

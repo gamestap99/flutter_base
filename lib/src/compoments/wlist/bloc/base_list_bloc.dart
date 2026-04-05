@@ -29,6 +29,10 @@ class BaseListBloc<T, F> extends BlocBaseMain<BaseListEvent, BaseListState<T>> {
       onSuccess: (rs) {
         final data = rs;
 
+        print("data:${data}");
+        print("data.status:${data.status}");
+        print("data.status:${data.success}");
+
         if (data.success) {
           cacheSearch = {
             ...cacheSearch,
@@ -125,6 +129,8 @@ class BaseListBloc<T, F> extends BlocBaseMain<BaseListEvent, BaseListState<T>> {
     if (api == null) {
       return;
     }
+
+    if (state.status == EBlocStateStatus.loadingMore) return;
 
     if (!state.isNextPageAvailable) {
       return;

@@ -152,6 +152,7 @@ class _WFormState<T> extends State<WForm<T>> {
                 },
                 builder: (context, state) {
                   return WMultiDynamicSelect(
+                    chipColor: element.options?.iconColor,
                     stackedLabel: true,
                     label: element.label,
                     onCallbackBuilder: element.customDynamicBuilder!,
@@ -181,6 +182,12 @@ class _WFormState<T> extends State<WForm<T>> {
                 },
                 builder: (context, state) {
                   return WMultiSelect<dynamic>(
+                    label: element.label,
+                    labelStyle: element.labelStyle,
+                    required: getRequired(element),
+                    fillColor: element.fillColor?.call(state),
+                    chipColor: element.options?.iconColor,
+                    requiredColor: element.options?.requiredColor,
                     items: element.itemsMulti,
                     validator: (value) {
                       return null;
@@ -329,6 +336,7 @@ class _WFormState<T> extends State<WForm<T>> {
             }
 
             return WSelect(
+              labelStyle: element.labelStyle,
               name: element.name,
               label: element.label,
               onChanged: (value) {
@@ -347,6 +355,7 @@ class _WFormState<T> extends State<WForm<T>> {
               itemSelect: (content, int index) {},
               selectLabel: () {},
               selectValue: () {},
+              fillColor: element.fillColor?.call(state),
               // stackedLabel: true,
             );
           },

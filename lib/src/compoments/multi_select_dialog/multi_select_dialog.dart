@@ -180,12 +180,12 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
       padding: const EdgeInsets.all(2.0),
       child: ChoiceChip(
         backgroundColor: widget.unselectedColor,
-        selectedColor: widget.colorator?.call(item.value) ?? widget.selectedColor ?? Theme.of(context).primaryColor.withOpacity(0.35),
+        selectedColor: widget.colorator?.call(item.value) ?? widget.selectedColor ?? Theme.of(context).primaryColor.withValues(alpha: 0.35),
         label: Text(
           item.label,
           style: item.selected
               ? TextStyle(
-                  color: widget.selectedItemsTextStyle?.color ?? widget.colorator?.call(item.value) ?? widget.selectedColor?.withOpacity(1) ?? Theme.of(context).primaryColor,
+                  color: widget.selectedItemsTextStyle?.color ?? widget.colorator?.call(item.value) ?? widget.selectedColor?.withValues(alpha: 1) ?? Theme.of(context).primaryColor,
                   fontSize: widget.selectedItemsTextStyle?.fontSize,
                 )
               : widget.itemsTextStyle,
@@ -286,31 +286,62 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
                         ),
                       ))),
       ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: <Widget>[
-        TextButton(
-          child: widget.cancelText ??
-              Text(
-                "CANCEL",
-                style: TextStyle(
-                  color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onCancelTap(context, widget.initialValue);
+        Checkbox(
+          value: _selectedValues.isNotEmpty && _selectedValues.length == _items.length,
+          onChanged: (isChecked) {
+            setState(() {
+              _selectedValues = [];
+              if (isChecked == true) {
+                _selectedValues.addAll(_items.map((e) {
+                  e.selected = true;
+                  return e.value;
+                }));
+              } else {
+                for (var e in _items) {
+                  e.selected = false;
+                }
+              }
+
+              if (widget.separateSelectedItems) {
+                _items = widget.separateSelected(_items);
+              }
+            });
+            if (widget.onSelectionChanged != null) {
+              widget.onSelectionChanged!(_selectedValues);
+            }
           },
         ),
-        TextButton(
-          child: widget.confirmText ??
-              Text(
-                'OK',
-                style: TextStyle(
-                  color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withOpacity(1) : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
-          },
-        )
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              child: widget.cancelText ??
+                  Text(
+                    "CANCEL",
+                    style: TextStyle(
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 1) : Theme.of(context).primaryColor,
+                    ),
+                  ),
+              onPressed: () {
+                widget.onCancelTap(context, widget.initialValue);
+              },
+            ),
+            TextButton(
+              child: widget.confirmText ??
+                  Text(
+                    'OK',
+                    style: TextStyle(
+                      color: (widget.selectedColor != null && widget.selectedColor != Colors.transparent) ? widget.selectedColor!.withValues(alpha: 1) : Theme.of(context).primaryColor,
+                    ),
+                  ),
+              onPressed: () {
+                widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
+              },
+            ),
+          ],
+        ),
       ],
     );
   }

@@ -23,6 +23,8 @@ class WSelect extends StatefulWidget {
   final TextEditingController controller;
   final List<MWSelect> items;
   final String? hintText;
+  final Color? fillColor;
+  final TextStyle? labelStyle;
 
   const WSelect({
     super.key,
@@ -43,6 +45,8 @@ class WSelect extends StatefulWidget {
     required this.controller,
     required this.items,
     this.name = '',
+    this.fillColor,
+    this.labelStyle,
   });
 
   @override
@@ -69,6 +73,8 @@ class _WSelectState extends State<WSelect> {
       stackedLabel: true,
       focusNode: focusNode,
       hintText: widget.hintText,
+      fillColor: widget.fillColor,
+      labelStyle: widget.labelStyle,
       onTap: () {
         focusNode.unfocus();
         showModalBottomSheet<void>(
@@ -151,7 +157,7 @@ class _Build extends StatelessWidget {
                     }
                   },
                   child: Ink(
-                    color: value == items[index].name ? CColor.primaryAccent.withOpacity(0.2) : null,
+                    color: value == items[index].name ? CColor.primaryAccent.withValues(alpha: 0.2) : null,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
